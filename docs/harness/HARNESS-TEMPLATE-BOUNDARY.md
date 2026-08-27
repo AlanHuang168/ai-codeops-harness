@@ -26,11 +26,12 @@ A future CLI, if ever proposed, requires its own decision. This document does no
 ### 1. Directory Contract（目录契约）
 
 ```text
-AGENTS.md                     Harness Core entry（核心入口）
-.ai/workflows/                Execution processes（执行流程）
-.ai/roles/                    Review perspectives（评审视角）
-.ai/rules/                    Generic engineering constraints（通用工程约束）
-.ai/skills/                   Project business capabilities（项目业务能力，唯一可携带项目内容的 .ai 目录）
+adapters/codex/AGENTS.md      Codex adapter source（Codex 适配器源码）
+adapters/claude/CLAUDE.md    Claude adapter source（Claude 适配器源码）
+src/workflows/                Workflow authoring source（工作流源码）
+src/roles/                    Role authoring source（角色源码）
+src/rules/                    Generic engineering constraints（通用工程约束源码）
+.ai/                          Installed Harness Runtime（已安装 Harness 运行时）
 .ai/state/                    Runtime State（运行状态）
 .ai/state/checkpoints/tasks/  Per-task checkpoints（按任务检查点）
 docs/harness/                 Harness Protocol（协议规范）
