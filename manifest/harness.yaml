@@ -8,36 +8,69 @@ runtime:
 mappings:
   - source: src/rules
     target: .ai/rules
+    owner: harness
+    update_policy: managed
+    conflict_policy: abort_on_user_change
   - source: src/roles
     target: .ai/roles
+    owner: harness
+    update_policy: managed
+    conflict_policy: abort_on_user_change
   - source: src/workflows
     target: .ai/workflows
+    owner: harness
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
 adapters:
   codex:
     status: stable
     source: adapters/codex/AGENTS.md
     target: AGENTS.md
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
   claude-code:
     status: stable
     source: adapters/claude/CLAUDE.md
     target: CLAUDE.md
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
   cursor:
     status: planned
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
   opencode:
     status: planned
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
   gemini-cli:
     status: planned
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
   qwen-code:
     status: planned
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
   trae:
     status: planned
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change
 
   generic-agents:
     status: planned
+    owner: adapter
+    update_policy: managed
+    conflict_policy: abort_on_user_change

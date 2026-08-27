@@ -37,13 +37,8 @@ not included here.
 
 ## Distribution Model
 
-The future distribution flow is:
-
-`Harness Source → Manifest → Installer → Installed Runtime`
-
-`manifest/harness.yaml` is the shared mapping source for macOS and Windows.
-It maps `src/**` to `.ai/**`. The selected Adapter generates the corresponding
-AI Tool entry file at the project root.
+See [`docs/harness/INSTALLER-CONTRACT.md`](docs/harness/INSTALLER-CONTRACT.md)
+for the cross-platform distribution contract and conflict policy.
 
 Installer support is not implemented yet.
 
