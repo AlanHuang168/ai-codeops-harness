@@ -35,6 +35,18 @@ layout, including `.ai/**` and project-root adapter files, for each adopting pro
 Project Context and Runtime State are supplied by each adopting project and are
 not included here.
 
+## Distribution Model
+
+The future distribution flow is:
+
+`Harness Source → Manifest → Installer → Installed Runtime`
+
+`manifest/harness.yaml` is the shared mapping source for macOS and Windows.
+It maps `src/**` to `.ai/**`. The selected Adapter generates the corresponding
+AI Tool entry file at the project root.
+
+Installer support is not implemented yet.
+
 ## Status
 
 Early release: v0.1.0.

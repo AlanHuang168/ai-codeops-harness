@@ -1,0 +1,43 @@
+name: ai-codeops-harness
+version: 0.1.0
+
+runtime:
+  source_root: src
+  target_root: .ai
+
+mappings:
+  - source: src/rules
+    target: .ai/rules
+  - source: src/roles
+    target: .ai/roles
+  - source: src/workflows
+    target: .ai/workflows
+
+adapters:
+  codex:
+    status: stable
+    source: adapters/codex/AGENTS.md
+    target: AGENTS.md
+
+  claude-code:
+    status: stable
+    source: adapters/claude/CLAUDE.md
+    target: CLAUDE.md
+
+  cursor:
+    status: planned
+
+  opencode:
+    status: planned
+
+  gemini-cli:
+    status: planned
+
+  qwen-code:
+    status: planned
+
+  trae:
+    status: planned
+
+  generic-agents:
+    status: planned
