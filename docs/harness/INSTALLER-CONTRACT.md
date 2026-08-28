@@ -1,8 +1,8 @@
 # Installer Contract
 
 This document defines the cross-platform behavior for the Installer. The
-current implementation provides the macOS/Linux first-install path only; it
-does not implement `install.ps1`, update, or a CLI.
+current implementation provides macOS/Linux and Windows first-install paths;
+it does not implement update or a CLI.
 
 ## Source and Runtime
 

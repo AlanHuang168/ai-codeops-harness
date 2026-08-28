@@ -40,8 +40,8 @@ not included here.
 See [`docs/harness/INSTALLER-CONTRACT.md`](docs/harness/INSTALLER-CONTRACT.md)
 for the cross-platform distribution contract and conflict policy.
 
-The macOS/Linux first-install path is implemented. Windows installation,
-updates, and distribution workflow are not implemented yet.
+The macOS/Linux and Windows first-install paths are implemented. Updates and
+the broader distribution workflow are not implemented yet.
 
 ## Status
 
