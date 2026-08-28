@@ -4,6 +4,18 @@
 
 **One Harness, Multiple Coding Agents.**
 
+## 🏗️ Architecture Overview
+
+<p align="center">
+  <img src="./assets/images/architecture-overview.png"
+       alt="AI CodeOps Harness Architecture"
+       width="100%" />
+</p>
+
+AI CodeOps Harness sits between the AI Coding Tool and the project, providing
+unified engineering governance, context, workflows, recovery, and multi-tool
+adapter capabilities.
+
 AI CodeOps Harness is an engineering governance and runtime framework for AI
 Coding Agents. It combines Engineering Governance, Context Engineering,
 Workflow Routing, and Runtime Recovery into a reusable Harness rather than a
@@ -81,6 +93,16 @@ user-project/
 Installation mappings are defined by the single
 `manifest/harness.yaml`; user files and Project Context in an adopting project
 are not part of this source repository.
+
+## 🚀 How It Works
+
+<p align="center">
+  <img src="./assets/images/how-it-works-token-efficiency.png"
+       alt="AI CodeOps Harness Workflow and Token Efficiency"
+       width="100%" />
+</p>
+
+> **About token efficiency:** Harness uses progressive disclosure and selective context loading to reduce unnecessary context loading. This describes the design mechanism and optimization goal rather than a guaranteed percentage of token savings; quantitative benchmarks are planned.
 
 ## Installation
 

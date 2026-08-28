@@ -4,6 +4,16 @@
 
 **One Harness, Multiple Coding Agents.**
 
+## 🏗️ 整体架构
+
+<p align="center">
+  <img src="./assets/images/architecture-overview.png"
+       alt="AI CodeOps Harness Architecture"
+       width="100%" />
+</p>
+
+AI CodeOps Harness 位于 AI Coding Tool 与项目工程之间，提供统一的工程治理、上下文、工作流、恢复和多工具适配能力。
+
 AI CodeOps Harness 是面向 AI Coding Agent 的工程治理与运行时框架。它把
 Engineering Governance（工程治理）、Context Engineering（上下文工程）、
 Workflow Routing（工作流路由）和 Runtime Recovery（运行时恢复）组织成一套
@@ -81,6 +91,16 @@ user-project/
 `src/**` → `.ai/**`。Source Repository 与 Installed Runtime（安装后运行时）分离。
 安装映射由 `manifest/harness.yaml` 统一定义；目标项目中的用户文件和 Project
 Context（项目上下文）不属于本仓库源码。
+
+## 🚀 Harness 如何工作？
+
+<p align="center">
+  <img src="./assets/images/how-it-works-token-efficiency.png"
+       alt="AI CodeOps Harness Workflow and Token Efficiency"
+       width="100%" />
+</p>
+
+> **关于 Token 效率：** Harness 通过 Progressive Disclosure（渐进式披露）和按需上下文加载减少无关 Context 的重复加载。当前描述表达的是设计机制和优化目标，并非固定比例的 Token 节省承诺；后续将通过 Benchmark 提供量化数据。
 
 ## 安装
 
