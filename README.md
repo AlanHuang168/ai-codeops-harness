@@ -208,28 +208,33 @@ Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Veri
 
 完整行为契约见 [`docs/harness/INSTALLER-CONTRACT.md`](docs/harness/INSTALLER-CONTRACT.md)。
 
-## 路线图
+## 🗺️ 路线图
 
-### 已完成
+路线图表示当前规划方向，并非固定交付承诺，后续可能根据实际使用反馈和社区需求调整。
 
-- Harness Core extraction
+### ✅ 已完成
+
+- Harness Core
 - Source / Runtime separation
+- Runtime Model
 - Codex Adapter
 - Claude Code Adapter
 - Unified Manifest
 - Installer Contract
-- macOS/Linux Installer
-- PowerShell Installer executable verification
+- macOS / Linux Installer
+- PowerShell Installer
 
-### 后续方向
+### 🚧 规划中
 
 - Native Windows verification
-- Update
-- Backup
+- Runtime lifecycle improvements
+- Safe Update / Upgrade（安全更新 / 升级）
+- Backup & Rollback（备份与回滚）
 - Uninstall
-- More Adapters
-- SDD/TDD workflow
-- Release distribution
+- More Coding Agent Adapters
+- SDD / TDD / SDD+TDD Workflows
+- Benchmark & Context Efficiency Evaluation（基准测试与上下文效率评估）
+- Release Distribution
 
 ## 当前状态
 

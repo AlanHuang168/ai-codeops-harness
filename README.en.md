@@ -215,28 +215,33 @@ workflows, so this capability is planned.
 See [`docs/harness/INSTALLER-CONTRACT.md`](docs/harness/INSTALLER-CONTRACT.md)
 for the complete behavior contract.
 
-## Roadmap
+## 🗺️ Roadmap
 
-### Completed
+The roadmap reflects the current development direction and is not a fixed delivery commitment. It may evolve based on real-world usage and community feedback.
 
-- Harness Core extraction
-- Source / Runtime separation
+### ✅ Available
+
+- Harness Core
+- Source / Runtime Separation
+- Runtime Model
 - Codex Adapter
 - Claude Code Adapter
 - Unified Manifest
 - Installer Contract
-- macOS/Linux Installer
-- PowerShell Installer executable verification
+- macOS / Linux Installer
+- PowerShell Installer
 
-### Planned
+### 🚧 Planned
 
-- Native Windows verification
-- Update
-- Backup
+- Native Windows Verification
+- Runtime Lifecycle Improvements
+- Safe Update / Upgrade
+- Backup & Rollback
 - Uninstall
-- More Adapters
-- SDD/TDD workflow
-- Release distribution
+- More Coding Agent Adapters
+- SDD / TDD / SDD+TDD Workflows
+- Benchmark & Context Efficiency Evaluation
+- Release Distribution
 
 ## Status
 
