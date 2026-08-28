@@ -26,6 +26,8 @@ Disclosure, Roles / Rules / Workflows, Checkpoints, Handoff, and AI Coding
 Tool Adapters. SDD, TDD, and SDD + TDD are Development Methods / Workflows the
 Harness can carry; they are not synonyms for the Harness itself.
 
+Runtime Model: [`docs/harness/RUNTIME-MODEL.md`](docs/harness/RUNTIME-MODEL.md)
+
 ## Architecture
 
 ```text

@@ -25,6 +25,8 @@ Handoff（交接）以及 AI Coding Tool Adapter（AI 编程工具适配器）�
 或 SDD + TDD 是 Harness 可以承载的 Development Method / Workflow（开发方法/工作流），
 不是 Harness 本身的同义词。
 
+Runtime Model（运行时模型）：[`docs/harness/RUNTIME-MODEL.md`](docs/harness/RUNTIME-MODEL.md)
+
 ## 项目骨架
 
 ```text
