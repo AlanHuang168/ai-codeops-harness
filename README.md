@@ -40,10 +40,12 @@ not included here.
 See [`docs/harness/INSTALLER-CONTRACT.md`](docs/harness/INSTALLER-CONTRACT.md)
 for the cross-platform distribution contract and conflict policy.
 
-Installer support is not implemented yet.
+The macOS/Linux first-install path is implemented. Windows installation,
+updates, and distribution workflow are not implemented yet.
 
 ## Status
 
 Early release: v0.1.0.
 
-Installation/distribution workflow is not implemented yet.
+Installation/distribution workflow is still early and limited to macOS/Linux
+first install.
