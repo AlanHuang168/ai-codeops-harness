@@ -56,15 +56,15 @@ Development Workflow
 ├── PRD
 ├── ADR
 ├── PLAN
-├── SDD (planned workflow)
-├── TDD (planned workflow)
-└── SDD + TDD (planned workflow)
+├── SDD（未实现）
+├── TDD（未实现）
+└── SDD + TDD（未实现）
    │
    ▼
 Project Code / Tests / Docs
 ```
 
-SDD/TDD 工作流目前仅作为 planned workflow（计划工作流）保留，不代表已经实现。
+SDD/TDD 工作流目前尚未实现，不代表已经可用。
 
 ## Source / Runtime 架构
 
@@ -161,12 +161,12 @@ distribution workflow（分发工作流）尚未实现。
 | --- | --- |
 | Codex | 稳定 |
 | Claude Code | 稳定 |
-| Cursor | 计划中 |
-| OpenCode | 计划中 |
-| Gemini CLI | 计划中 |
-| Qwen Code | 计划中 |
-| TRAE | 计划中 |
-| Generic AGENTS | 计划中 |
+| Cursor | 未实现 |
+| OpenCode | 未实现 |
+| Gemini CLI | 未实现 |
+| Qwen Code | 未实现 |
+| TRAE | 未实现 |
+| Generic AGENTS | 未实现 |
 
 Adapter 对应 AI Coding Tool / Agent Runtime，不对应底层模型。GPT、Claude、Gemini、
 Qwen、DeepSeek 等模型不会单独建立 Harness Adapter。
@@ -195,7 +195,7 @@ Harness = Governance / Runtime Layer（治理/运行时层）。
 Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Verification → Handoff
 ```
 
-当前仓库尚无正式 `sdd.md` / `tdd.md` 工作流，因此该能力为 planned。
+当前仓库尚无正式 `sdd.md` / `tdd.md` 工作流，因此该能力尚未实现。
 
 ## 安全与治理
 
@@ -221,7 +221,7 @@ Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Veri
 - macOS/Linux Installer
 - PowerShell Installer executable verification
 
-### 计划中
+### 后续方向
 
 - Native Windows verification
 - Update
