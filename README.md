@@ -155,23 +155,23 @@ distribution workflow（分发工作流）尚未实现。
 5. 使用 Codex 或 Claude Code 进入目标项目。
 6. Adapter → Bootstrap → Router → Harness Workflow。
 
-## Supported Tools
+## 支持的工具
 
 | Tool / Agent Runtime | 状态 |
 | --- | --- |
-| Codex | Stable |
-| Claude Code | Stable |
-| Cursor | Planned |
-| OpenCode | Planned |
-| Gemini CLI | Planned |
-| Qwen Code | Planned |
-| TRAE | Planned |
-| Generic AGENTS | Planned |
+| Codex | 稳定 |
+| Claude Code | 稳定 |
+| Cursor | 计划中 |
+| OpenCode | 计划中 |
+| Gemini CLI | 计划中 |
+| Qwen Code | 计划中 |
+| TRAE | 计划中 |
+| Generic AGENTS | 计划中 |
 
 Adapter 对应 AI Coding Tool / Agent Runtime，不对应底层模型。GPT、Claude、Gemini、
 Qwen、DeepSeek 等模型不会单独建立 Harness Adapter。
 
-## Core Concepts
+## 核心概念
 
 - **Bootstrap（启动）**：从工具入口进入 Harness，建立最小执行上下文。
 - **Router（路由）**：根据需求、架构、计划和实现状态选择安全 Workflow 阶段。
@@ -197,7 +197,7 @@ Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Veri
 
 当前仓库尚无正式 `sdd.md` / `tdd.md` 工作流，因此该能力为 planned。
 
-## Safety / Governance
+## 安全与治理
 
 - 所有安装路径使用 project-relative path（项目相对路径）。
 - `.ai/VERSION` 使用 managed file SHA-256 记录文件事实。
@@ -208,9 +208,9 @@ Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Veri
 
 完整行为契约见 [`docs/harness/INSTALLER-CONTRACT.md`](docs/harness/INSTALLER-CONTRACT.md)。
 
-## Roadmap
+## 路线图
 
-### Completed
+### 已完成
 
 - Harness Core extraction
 - Source / Runtime separation
@@ -221,7 +221,7 @@ Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Veri
 - macOS/Linux Installer
 - PowerShell Installer executable verification
 
-### Planned
+### 计划中
 
 - Native Windows verification
 - Update
@@ -231,7 +231,7 @@ Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Veri
 - SDD/TDD workflow
 - Release distribution
 
-## Status
+## 当前状态
 
 Early release: `v0.1.0`。
 
