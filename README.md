@@ -133,7 +133,11 @@ git clone https://github.com/AlanHuang168/ai-codeops-harness.git
 Set-Location your-project
 & ..\ai-codeops-harness\installer\install.ps1 -Target . -Adapter codex
 ```
-
+<p align="center">
+  <img src="./assets/images/windowns1.png"
+       alt="AI CodeOps Harness Architecture"
+       width="100%" />
+</p>
 多选 Adapter：
 
 ```powershell
