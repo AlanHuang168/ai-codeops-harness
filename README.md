@@ -63,6 +63,31 @@ Development Workflow
    ▼
 Project Code / Tests / Docs
 ```
+## 工程控制平面   
+                
+```
+                    Developer
+                        │
+                        ▼
+              ai-codeops-harness
+        Engineering Control Plane
+                        │
+       ┌────────────────┼────────────────┐
+       │                │                │
+   Governance        Runtime         Recovery
+     治理              执行             恢复
+       │                │                │
+       └────────────────┼────────────────┘
+                        ▼
+              Coding Agent Adapter
+                 ┌──────┴──────┐
+               Codex        Claude
+                 │              │
+                 └──────┬───────┘
+                        ▼
+                  Code / Test / Docs
+```
+
 
 SDD/TDD 工作流目前尚未实现，不代表已经可用。
 
