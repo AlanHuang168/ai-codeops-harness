@@ -33,6 +33,7 @@ src/roles/                    Role authoring source（角色源码）
 src/rules/                    Generic engineering constraints（通用工程约束源码）
 .ai/                          Installed Harness Runtime（已安装 Harness 运行时）
 .ai/state/                    Runtime State（运行状态）
+.ai/state/approvals/          Machine-readable Approval Records（机器可读审批记录）
 .ai/state/checkpoints/tasks/  Per-task checkpoints（按任务检查点）
 docs/harness/                 Harness Protocol（协议规范）
 {{CONTEXT_DIR}}/              Project Context（项目上下文，默认 docs/project）
@@ -66,7 +67,9 @@ Substituted manually when a project adopts the template:
 
 ### 4. Empty Runtime State Skeleton（空运行状态骨架）
 
-A minimal `execution-state.yaml` shape carrying recovery fields and a `project_context` reference, with no task history and no project knowledge.
+A minimal `execution-state.yaml` shape carrying recovery fields, Approval
+Record（审批记录） references, and a `project_context` reference, with no task
+history and no project knowledge.
 
 ## What the Project Must Provide（项目必须自行提供）
 
@@ -90,7 +93,7 @@ A template cannot infer these. Adoption is incomplete until they exist:
 2. Substitute every placeholder; leaving one unsubstituted is a defect.
 3. Create the four Project Context documents per `PROJECT-CONTEXT-CONTRACT.md`.
 4. Write the AI adapter file as an adapter only; it must not become a second Core entry.
-5. Initialize Runtime State with a `project_context` reference and no task history.
+5. Initialize Runtime State with a `project_context` reference, Approval Record directory, and no task history.
 6. Confirm conformance using the contract's Conformance section.
 
 ## Migrating an Existing Project（既有项目迁移）

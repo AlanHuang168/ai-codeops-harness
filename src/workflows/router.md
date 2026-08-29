@@ -78,7 +78,10 @@ Enter:
 
 PLAN
 
-Enter IMPL after PLAN is Ready.
+Enter IMPL after PLAN is Approved（已批准） and an active Approval Record
+（活跃审批记录） exists. The Approval Record authorizes continuous IMPL execution
+inside the Approved PLAN scope; Router must not require Human Approval again
+after each normal Task completion.
 
 ## Route: IMPL
 
@@ -144,6 +147,11 @@ IMPL → ADR
 IMPL → PRD
 
 Re-route once the upstream problem is resolved.
+
+Router decides the Workflow entry point. It does not make Task completion an
+approval boundary. Under the default `plan_continuous` execution mode, an
+Approved PLAN returns to Orchestrator / IMPL for the next READY Task unless a
+real Human Gate exists.
 
 ## Progressive Disclosure
 

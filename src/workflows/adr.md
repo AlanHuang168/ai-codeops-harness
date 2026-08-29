@@ -148,6 +148,11 @@ ADR status must at least support:
 - Superseded
 - Deprecated
 
+When Human accepts an ADR, persist that Human Decision（人工决策） as an
+Approval Record（审批记录） under `.ai/state/approvals/` when Harness V2 Runtime
+State is available. ADR status alone is not sufficient for reliable
+cross-session approval recovery.
+
 When an existing decision is replaced:
 
 Do not delete the historical ADR.
@@ -168,6 +173,7 @@ After the ADR is Accepted, check and sync:
 - contracts/
 - Subsystem README / AGENTS.md
 - Other affected architecture docs
+- Runtime State approval reference, when state updates are allowed
 
 Update only affected content.
 

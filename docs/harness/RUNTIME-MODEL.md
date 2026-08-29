@@ -49,6 +49,19 @@ protocols:
 - **Governance**: Rules, Roles, PRD, ADR, PLAN, and validation gates constrain
   what may be changed.
 
+Accepted PLAN（已接受计划） is the Runtime Unit（运行单元） and Authorization
+Unit（授权单元）. Task（任务） is the Execution Unit（执行单元）. Human Gate
+（人工门禁） is the Decision Unit（决策单元）.
+
+Human-in-the-loop（人在回路） means Human owns key decisions, not every normal
+execution step. Human Approval（人工审批） is a persisted Runtime Fact（运行事实）.
+An active Approval Record（审批记录） authorizes Runtime to execute approved
+in-scope Tasks, validation, checkpointing, state updates, and ordinary
+in-scope fixes until PLAN completion or a real Human Gate.
+
+Artifact（产物） defines what may be done. Approval Record defines whether Human
+authorized executing that artifact. Approval cannot expand artifact scope.
+
 The installed representation is:
 
 ~~~text
@@ -76,7 +89,7 @@ Harness Runtime
 │   └── Authority + Progressive Disclosure
 │
 └── State Runtime
-    └── Checkpoint + Resume + Handoff
+    └── Approval + Checkpoint + Resume + Handoff
 ~~~
 
 These are runtime responsibilities, not four resident processes:
@@ -86,7 +99,7 @@ These are runtime responsibilities, not four resident processes:
 | Entry Runtime | Start from Codex or Claude Code and enter the Harness contract | IMPLEMENTED adapter files; execution is performed by the AI tool |
 | Routing Runtime | Select PRD, ADR, PLAN, or IMPL and escalate on drift | PROTOCOL-DEFINED by Router and Orchestrator workflows |
 | Context Runtime | Apply authority order and load only required context | PROTOCOL-DEFINED; no separate context server |
-| State Runtime | Record recovery facts and resume from per-task Checkpoints | PROTOCOL-DEFINED; file artifacts are the runtime boundary |
+| State Runtime | Record recovery facts, Approval Records, and per-task Checkpoints | PROTOCOL-DEFINED; file artifacts are the runtime boundary |
 
 ## Runtime Lifecycle
 
@@ -103,7 +116,10 @@ flowchart TD
     H --> I[Workflow Execution]
     I --> J[Verification]
     J --> K[Checkpoint]
-    K --> L[Handoff]
+    K --> N[DAG Recalculation]
+    N --> O{READY Task?}
+    O -- YES, no Human Gate --> H
+    O -- NO --> L[Handoff / Final Report]
     L --> M[Next Session]
     M --> E
 ~~~
@@ -112,6 +128,38 @@ Resume? is a decision against Runtime Facts and Current Reality. An
 INTERRUPTED or RUNNING task is not assumed to be complete. A legacy RUNNING
 task without Active Executor Proof is converted to INTERRUPTED before
 recovery. A closed Checkpoint for a COMPLETE task is not loaded by default.
+Historical checkpoint local state is not current executable state. Before any
+old `INTERRUPTED`, `ESCALATED`, `BLOCKED`, or `APPROVAL_REQUIRED` checkpoint is
+resumed, the Runtime reconciles it against newer accepted artifacts, top-level
+state, the current active PLAN, and later task/checkpoint evidence.
+If an Approved PLAN and active matching Approval Record already exist, the
+record is still valid, the requested action is in scope, and no Human Gate is
+active, recovery must continue from the interrupted or next READY Task without
+asking for PLAN approval again.
+
+Default Runtime Execution Loop（默认运行循环）:
+
+~~~text
+PLAN_APPROVED
+-> SELECT_READY_TASK
+-> TASK_RUNNING
+-> VALIDATE
+-> CHECKPOINT
+-> DAG_RECALCULATE
+-> SELECT_READY_TASK
+~~~
+
+Terminal states（终止状态）:
+
+- `PLAN_COMPLETE`（计划完成）
+- `APPROVAL_REQUIRED`（需要人工批准）
+- `ARCHITECTURE_DRIFT`（架构漂移）
+- `SCOPE_EXPANSION`（范围扩张）
+- `SECURITY_GATE`（安全门禁）
+- `DESTRUCTIVE_ACTION`（破坏性操作）
+- `UNRECOVERABLE_FAILURE`（不可恢复失败）
+
+Task completion is not a Human Gate.
 
 ## Progressive Disclosure
 
@@ -168,13 +216,52 @@ Checkpoint lifecycle:
 CREATED → UPDATED → VALIDATED → CLOSED / INTERRUPTED
 ~~~
 
+### Approval
+
+Approval Record（审批记录） is a machine-readable Runtime Fact for Human
+Decision（人工决策）. It is stored under:
+
+~~~text
+.ai/state/approvals/<approval-id>.yaml
+~~~
+
+Top-level State references active approval ids, but the record itself carries
+the artifact, decision, status, scope allow/deny lists, provenance, expiration,
+and supersession fields. Conversation approval without a persisted record is
+not reliable recovery evidence.
+
+Approval Recovery Authority（审批恢复权威）:
+
+1. Accepted Controlling Artifact（已接受控制产物）
+2. Active Machine-Readable Approval Record（活跃机器可读审批记录）
+3. Top-level Runtime State（顶层运行状态）
+4. Checkpoint Evidence（检查点证据）
+5. Handoff（交接）
+6. Conversation Context（对话上下文）
+
 ### Resume
 
 Resume Protocol（恢复协议） is the decision procedure used at Bootstrap and
 by the Orchestrator. It reads authoritative Runtime Facts and Current Reality,
-then prefers INTERRUPTED tasks, followed by a unique READY task. Multiple
-interrupted tasks require a choice; multiple ready tasks are ordered by
-Critical Path（关键路径）, Unblocking Power（解阻能力）, and Risk（风险）.
+loads the matching active Approval Record, reconciles historical checkpoints,
+then prefers reconciled ACTIVE interrupted tasks, followed by reconciled READY
+tasks. Multiple active interrupted tasks require a choice; multiple ready tasks
+are ordered by Critical Path（关键路径）, Unblocking Power（解阻能力）, and Risk
+（风险）. Under the default `plan_continuous` mode, selecting a READY task
+continues the Approved PLAN execution when Approval Record scope covers the
+requested action; it does not create a new Human Approval boundary.
+
+Historical Checkpoint Reconciliation（历史检查点对账） authority order:
+
+1. Newer Accepted Controlling Artifact（更新的已接受控制产物）
+2. Top-level Runtime State（顶层运行状态）
+3. Current Active PLAN（当前活跃计划）
+4. Later Task / Checkpoint Evidence（后续任务 / 检查点证据）
+5. Historical Checkpoint Local State（历史检查点本地状态）
+
+Reconciliation can classify a checkpoint as `ACTIVE`, `SUPERSEDED`,
+`RESOLVED`, `HISTORICAL`, `READY`, `BLOCKED_EXTERNAL`, or `APPROVAL_REQUIRED`.
+Only `ACTIVE` and `READY` are executable.
 
 ### Handoff
 
@@ -259,7 +346,7 @@ The current repository has no formal sdd.md or tdd.md workflow. These are
 | PRD / ADR / PLAN / IMPL workflows | PROTOCOL-DEFINED | src/workflows/ |
 | Rules and Roles | PROTOCOL-DEFINED | src/rules/, src/roles/ |
 | Authority and Progressive Disclosure | PROTOCOL-DEFINED | Adapter, Router, and V2 protocol |
-| State / Checkpoint / Resume / Handoff | PROTOCOL-DEFINED | HARNESS-V2.md and runtime file boundary |
+| State / Approval Record / Checkpoint / Resume / Handoff | PROTOCOL-DEFINED | HARNESS-V2.md and runtime file boundary |
 | Resident Runtime Engine | NOT IMPLEMENTED | No process or service in repository |
 | Database-backed runtime state | NOT IMPLEMENTED | No database or state service |
 | SDD / TDD workflows | PLANNED | No formal sdd.md / tdd.md |
@@ -272,14 +359,16 @@ an image or add a new runtime capability.
 
 ### Composition
 
-Use a left-to-right or top-to-bottom flow with six visual groups:
+Use a left-to-right or top-to-bottom flow with seven visual groups:
 
 1. **Entry**: Adapter → Bootstrap.
 2. **Decision**: Router with a clearly visible Resume return path.
 3. **Context**: Context Runtime as the controlled loading stage.
 4. **Execution**: Workflow → Verify.
-5. **Recovery**: Checkpoint loops back to Resume.
-6. **Handoff**: Handoff leads to the next session.
+5. **Continuation**: Checkpoint → DAG Recalculation loops back to the next
+   READY Task while the PLAN approval still covers it.
+6. **Recovery**: Checkpoint loops back to Resume.
+7. **Handoff**: Handoff leads to the next session.
 
 ### Core visual flow
 
@@ -298,7 +387,9 @@ Verify             │
    ↓               │
 Checkpoint ────────┘
    ↓
-Handoff
+DAG Recalculation ──→ next READY Task (back to Context Runtime)
+   ↓
+Handoff / Final Report
 ~~~
 
 ### Visual constraints
@@ -306,8 +397,9 @@ Handoff
 - Show the AI Coding Tool outside the Harness boundary as the executor.
 - Use a distinct boundary around Harness Runtime responsibilities.
 - Use a loop arrow for recovery, not a linear “completion” arrow.
+- Show continuous PLAN execution as a loop back to the next READY Task, not as
+  a Human Approval step after every Task.
 - Label Context Loading as selective, not exhaustive.
 - Mark SDD/TDD and future adapters as Planned if shown.
 - Keep .ai/** as the installed runtime label and src/** as the authoring source label.
 - Do not depict a daemon, database, model host, or hidden orchestration service.
-

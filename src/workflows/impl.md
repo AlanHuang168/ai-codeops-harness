@@ -2,8 +2,9 @@
 
 ## Purpose
 
-Implement the confirmed PLAN one atomic task at a time,
-and use validation and review to keep the implementation consistent with the PRD, ADR, and PLAN.
+Implement the confirmed PLAN as a continuous authorized Runtime Unit（运行单元）,
+while keeping each PLAN Task as an Execution Unit（执行单元） for scope,
+validation, checkpointing, and recovery.
 
 IMPL is responsible for:
 
@@ -20,11 +21,12 @@ IMPL does not redefine requirements, architecture, or implementation scope.
 Before entering IMPL, confirm:
 
 - PLAN is clear
-- The current Task is executable
-- Dependencies are satisfied
-- Target is confirmed
-- Validation is defined
-- No blocking decisions
+- PLAN is Approved（已批准） or the requested change is safe for direct IMPL
+- Active Approval Record（活跃审批记录） exists when executing an approved artifact
+- At least one Task is executable, resumable, or ready to be selected by the Orchestrator
+- Dependencies for the selected Task are satisfied
+- Target and Validation are defined
+- No active Human Gate（人工决策门禁） is blocking execution
 
 Otherwise, do not start implementation.
 
@@ -32,7 +34,10 @@ Otherwise, do not start implementation.
 
 ### 1. Select Task
 
-Execute only one PLAN Task at a time.
+Execute one PLAN Task at a time, but do not treat Task completion as an
+approval boundary. Under the default `plan_continuous` execution mode, the
+Runtime continues from one ready Task to the next inside the Approved PLAN
+scope until the PLAN is complete or a real Human Gate is reached.
 
 Read what the current Task needs:
 
@@ -52,6 +57,23 @@ Do not load the entire Harness for a single Task.
 
 For Harness V2, load a per-task Checkpoint（按任务检查点） only when the current Task is `RUNNING`（运行中） or `INTERRUPTED`（已中断）, or when audit / State Drift（状态漂移） / missing evidence / explicit user request requires it. COMPLETE Task（已完成任务） defaults to no Checkpoint loading.
 
+If `execution_mode` is absent, assume `plan_continuous`. `task_gated` is a
+compatibility mode only when explicitly declared by the Approved PLAN or
+Runtime State.
+
+Before executing an approved PLAN Task, verify the active Approval Record:
+
+- matches the current PLAN artifact id and digest when available;
+- has `decision: approved` or valid `conditionally_approved`;
+- has `status: active`;
+- is not expired, revoked, superseded, or historical;
+- allows the requested action; and
+- does not deny the requested action.
+
+If no valid Approval Record exists, classify `APPROVAL_REQUIRED` rather than
+using conversation memory, Handoff prose, or PLAN Markdown prose as approval
+authority.
+
 ### 2. Pre-check
 
 Before modifying, confirm:
@@ -64,7 +86,11 @@ Before modifying, confirm:
 
 Stop when clear drift is found.
 
-If the Task is resumed from `INTERRUPTED`, use Checkpoint（检查点） + Reality Anchor（事实锚点） to decide whether to resume implementation or rerun validation. Do not infer `COMPLETE` from chat history.
+If the Task is resumed from `INTERRUPTED`, first confirm Historical Checkpoint
+Reconciliation（历史检查点对账） classified it as `ACTIVE`. Then use Checkpoint
+（检查点） + Reality Anchor（事实锚点） to decide whether to resume implementation
+or rerun validation. Do not infer `COMPLETE` from chat history or checkpoint
+local state alone.
 
 ### 3. Implement
 
@@ -142,13 +168,28 @@ A Task may complete only when:
 - PRD / ADR is not violated
 - Scope is not expanded
 
-Move to the next Task after completion.
+Move to the next Task after completion when the active PLAN is Approved,
+`execution_mode` is `plan_continuous`, and the active Approval Record covers
+the next requested action.
 
 For Harness V2 tasks, exit in this order:
 
 ```text
-Implementation -> Validation -> Checkpoint/State Update -> DAG Recalculation -> STOP
+Implementation -> Validation -> Checkpoint/State Update -> DAG Recalculation -> Select Next READY Task
 ```
+
+Stop after DAG Recalculation only when a terminal condition is reached:
+
+- `PLAN_COMPLETE`（计划完成）
+- `APPROVAL_REQUIRED`（需要人工批准）
+- `ARCHITECTURE_DRIFT`（架构漂移）
+- `SCOPE_EXPANSION`（范围扩张）
+- `SECURITY_GATE`（安全门禁）
+- `DESTRUCTIVE_ACTION`（破坏性操作）
+- `UNRECOVERABLE_FAILURE`（不可恢复失败）
+- Explicit Human Decision（显式人工决策）
+
+Task Completed（任务完成） is not a Human Gate.
 
 State（状态） records only Recovery Summary（恢复摘要）: task status, checkpoint path, minimal Validation Summary（验证摘要）, ready / interrupted / blocked / escalated sets, and recommended next action. Detailed validation logs, command output, secrets, tokens, cookies, database connection values, raw PII, and long narrative history must not be written to State.
 
@@ -174,12 +215,19 @@ System boundary, Data Owner, Contract, or architecture assumption invalidated:
 STOP
 → ADR
 
+Set Runtime terminal state to `ARCHITECTURE_DRIFT` / `APPROVAL_REQUIRED`.
+
 ### Plan Drift
 
 Files, dependencies, order, or Change Set clearly invalidated:
 
 STOP
 → PLAN
+
+Set Runtime terminal state to `SCOPE_EXPANSION` / `APPROVAL_REQUIRED` when the
+new work is outside the Approved PLAN scope. If the issue is a normal
+implementation bug that can be fixed inside the current Task scope, keep it in
+IMPL, fix it, revalidate, and continue.
 
 Do not resolve an upstream decision problem on your own in IMPL.
 
@@ -190,6 +238,9 @@ Allowed:
 - Minimal changes required by the current Task
 - Necessary test fixes directly caused by the current Task
 - Well-defined compatibility fixes
+- Ordinary validation-failure fixes that remain inside the current Task and Approved PLAN scope
+- PLAN-approved documentation synchronization
+- PLAN-approved state and checkpoint updates covered by an active Approval Record
 
 Forbidden:
 
@@ -199,6 +250,8 @@ Forbidden:
 - Adding an unplanned dependency
 - Extending Future Scope
 - Modifying an Accepted ADR
+- Treating Approval Record as permission to expand PLAN scope
+- Proceeding with an action listed in `scope.deny`
 
 When you find something worth improving that is not part of the current Task:
 
@@ -269,20 +322,24 @@ Pre-check
 → Validate
 → Review
 → Task Complete
-→ Stop
+→ Checkpoint / State Update
+→ DAG Recalculation
+→ Select Next READY Task or Terminal State
 
-Each IMPL run executes only one Atomic Task by default.
+Each Task remains atomic for scope and validation. The default IMPL run is
+continuous across Tasks inside one Approved PLAN.
 
-Do not automatically start the next Task.
+Automatically start the next READY Task when:
 
-The next Task requires:
 - Current Task Status = COMPLETE
 - Validation results recorded
 - Checkpoint/State Update（检查点 / 状态更新） completed when Harness V2 applies
 - DAG Recalculation（DAG 重新计算） completed when Harness V2 applies
 - No unresolved Blocker
 - No Business / Architecture / Plan Drift
-- Explicit continuation or a new Router run
+- The next Task remains inside the Approved PLAN scope
+- The active Approval Record covers the requested action
+- No active Human Gate exists
 
 ## Task Exit Gate
 
@@ -302,9 +359,9 @@ Allowed Task Status:
 - CHANGES REQUIRED
 - BLOCKED
 - ESCALATED
+- APPROVAL_REQUIRED
 
 After COMPLETE:
 
-STOP.
-
-Do not automatically execute the next Atomic Task.
+Continue to the next READY Task under `plan_continuous`, or stop only for a
+terminal state or explicit `task_gated` compatibility mode.

@@ -31,6 +31,7 @@ Definitions:
 - PRD Ready = no blocking Business Unknown remains, but the user has not necessarily accepted it.
 - PRD Accepted = PRD Ready + explicit user approval.
 - PRD Persisted = Accepted PRD has been written as an official project artifact under `docs/prd/`.
+- PRD Approval Persisted = explicit user approval has been written as an Approval Record（审批记录） under `.ai/state/approvals/`.
 
 Only a Persisted + Accepted PRD can be used as the formal upstream input for ADR / PLAN.
 
@@ -213,7 +214,8 @@ The PRD Workflow is complete only when all of:
 2. User Approval has been obtained
 3. Status = Accepted
 4. Artifact has been persisted
-5. Blocker = 0
+5. Approval Record has been persisted when Harness V2 Runtime State is available
+6. Blocker = 0
 
 Before Exit, confirm:
 
@@ -224,6 +226,7 @@ Before Exit, confirm:
 5. Blocking Business Unknowns are resolved
 6. Non-blocking Open Questions are recorded
 7. The Accepted PRD artifact exists under `docs/prd/`
+8. The Approval Record is referenced from Runtime State when state updates are allowed
 
 After Exit, re-run the Router.
 

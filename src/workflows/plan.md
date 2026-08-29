@@ -11,8 +11,13 @@ PLAN answers:
 - Where to change it
 - In what order to change it
 - How to validate each step
+- Whether any Task contains an explicit Human Decision（显式人工决策）
 
 PLAN does not redefine requirements or architecture.
+Approved PLAN（已批准计划） is the Runtime Authorization Boundary（运行授权边界）.
+Approval Record（审批记录） is the machine-readable Runtime Fact that records the
+Human Decision authorizing the PLAN. PLAN status alone is not sufficient for
+reliable cross-session recovery unless a legacy migration record is created.
 
 ## Preconditions
 
@@ -160,6 +165,36 @@ At minimum:
 6. Validation Plan
 7. Risks
 8. Documentation Impact
+9. Execution Mode（执行模式） and Approval Scope（批准范围）
+10. Approval Record target（审批记录目标）
+
+Default:
+
+```yaml
+execution_mode: plan_continuous
+approval_record:
+  artifact:
+    type: PLAN
+    id: <PLAN-id>
+  default_scope:
+    allow:
+      - plan_execution
+      - implementation
+      - validation
+      - checkpoint_update
+      - state_update
+      - in_scope_bug_fix
+      - documentation_sync
+    deny:
+      - destructive_operation
+      - production_deploy
+      - public_release
+      - registry_publish
+      - scope_expansion
+```
+
+`task_gated` may be used only as an explicit compatibility mode. Do not make it
+the default.
 
 ## Task Template
 
@@ -179,6 +214,10 @@ Changes:
 
 Validation:
 - <validation method>
+
+Human Gate:
+- requires_human_decision: false
+- reason: null
 
 ## Forbidden
 
@@ -224,3 +263,9 @@ When PLAN is done, confirm:
 5. No blocking business decisions
 6. No blocking architecture decisions
 7. Safe to enter IMPL
+8. The Approval Record will authorize continuous execution across READY Tasks inside this PLAN scope
+
+After Human Approval（人工批准）, persist the decision as an Approval Record
+under `.ai/state/approvals/<approval-id>.yaml` and reference it from
+`.ai/state/execution-state.yaml`. Do not rely only on chat, Markdown prose, or
+Handoff.
