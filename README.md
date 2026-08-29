@@ -117,6 +117,12 @@ cd your-project
 /path/to/ai-codeops-harness/installer/install.sh --target . --adapter codex
 ```
 
+<p align="center">
+  <img src="./assets/images/macbook1.png"
+       alt="AI CodeOps Harness Architecture"
+       width="100%" />
+</p>
+
 不指定 `--target` 时使用当前目录。可重复指定 Adapter：
 
 ```bash
