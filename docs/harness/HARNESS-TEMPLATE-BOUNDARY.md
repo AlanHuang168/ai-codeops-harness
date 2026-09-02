@@ -14,19 +14,19 @@ This document defines **what a portable Harness template provides** and **what e
 
 At this boundary version:
 
-- **No CLI**（不实现命令行工具）. No generator, scaffolder, or installer is defined or implied.
+- **No standalone CLI or generator**（不实现独立 CLI 或生成器）. Project-scoped installation is handled only by the Installer Contract and the existing platform installer scripts.
 - **No automatic substitution**. Placeholder substitution is manual.
 - **No file removal**. Adopting the template never requires deleting an existing project document.
 - **No business behaviour**. The template carries no domain logic, schema, API, or deployment content.
 
-A future CLI, if ever proposed, requires its own decision. This document does not authorize one.
+A future standalone CLI or generator requires its own decision. This document authorizes no distribution mechanism beyond the existing Installer Contract.
 
 ## What the Template Provides（模板提供什么）
 
 ### 1. Directory Contract（目录契约）
 
 ```text
-adapters/codex/AGENTS.md      Codex adapter source（Codex 适配器源码）
+adapters/shared/AGENTS.md     Common Harness Bootstrap（通用 Harness 启动入口）
 adapters/claude/CLAUDE.md    Claude adapter source（Claude 适配器源码）
 src/workflows/                Workflow authoring source（工作流源码）
 src/roles/                    Role authoring source（角色源码）

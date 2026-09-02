@@ -17,7 +17,7 @@ The current source provides the following evidence:
 
 | Evidence | What it proves | Status |
 | --- | --- | --- |
-| adapters/codex/AGENTS.md | Tool entry, Bootstrap, routing, progressive disclosure, and V2 recovery rules | IMPLEMENTED adapter contract |
+| adapters/shared/AGENTS.md | Common Bootstrap, routing, progressive disclosure, and V2 recovery rules | IMPLEMENTED Harness entry contract |
 | adapters/claude/CLAUDE.md | Claude Code entry adapter and Bootstrap forwarding | IMPLEMENTED adapter contract |
 | src/workflows/router.md | Workflow selection, re-entry, escalation, and routing output | PROTOCOL-DEFINED |
 | src/workflows/*.md | PRD, ADR, PLAN, IMPL, and Orchestrator workflow instructions | PROTOCOL-DEFINED |

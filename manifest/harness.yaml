@@ -5,6 +5,13 @@ runtime:
   source_root: src
   target_root: .ai
 
+bootstrap:
+  source: adapters/shared/AGENTS.md
+  target: AGENTS.md
+  owner: harness
+  update_policy: managed
+  conflict_policy: abort_on_user_change
+
 mappings:
   - source: src/rules
     target: .ai/rules
@@ -25,8 +32,6 @@ mappings:
 adapters:
   codex:
     status: stable
-    source: adapters/codex/AGENTS.md
-    target: AGENTS.md
     owner: adapter
     update_policy: managed
     conflict_policy: abort_on_user_change

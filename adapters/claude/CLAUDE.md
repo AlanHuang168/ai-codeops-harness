@@ -15,7 +15,6 @@ It does not own Harness Core or Project Context.
 ## Authority
 
 - Harness Core: `AGENTS.md` + `.ai/`
-- Harness Protocol: `docs/harness/`
 - Project Context: `docs/project/`
 - Runtime State: `.ai/state/`
 

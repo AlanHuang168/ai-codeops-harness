@@ -30,7 +30,7 @@ trap cleanup EXIT HUP INT TERM
 error() { printf 'error: %s\n' "$*" >&2; }
 
 usage() {
-  printf '%s\n' 'Usage: install.sh [--target PATH] [--adapter NAME]...'
+  printf '%s\n' 'Usage: install.sh [--target PATH] [--adapter NAME...]'
 }
 
 while [ "$#" -gt 0 ]; do
@@ -41,13 +41,21 @@ while [ "$#" -gt 0 ]; do
       shift 2
       ;;
     --adapter)
-      [ "$#" -ge 2 ] || { error "--adapter requires a name"; exit "$GENERAL_ERROR"; }
+      shift
       if [ -z "$ADAPTERS_FILE" ]; then
         ADAPTERS_FILE="${TMPDIR:-/tmp}/ai-codeops-adapters.$$.tmp"
         : > "$ADAPTERS_FILE" || { error "cannot create temporary adapter list"; exit "$GENERAL_ERROR"; }
       fi
-      printf '%s\n' "$2" >> "$ADAPTERS_FILE"
-      shift 2
+      adapter_count=0
+      while [ "$#" -gt 0 ]; do
+        case "$1" in
+          -*) break ;;
+        esac
+        printf '%s\n' "$1" >> "$ADAPTERS_FILE"
+        adapter_count=$((adapter_count + 1))
+        shift
+      done
+      [ "$adapter_count" -gt 0 ] || { error "--adapter requires at least one name"; exit "$GENERAL_ERROR"; }
       ;;
     --help|-h)
       usage
@@ -90,10 +98,23 @@ runtime_field() {
   ' "$MANIFEST"
 }
 
+bootstrap_field() {
+  awk -v field="$1" '
+    $0 == "bootstrap:" { active=1; next }
+    active && /^[^ ]/ { exit }
+    active && $1 == field ":" { print $2; exit }
+  ' "$MANIFEST"
+}
+
 manifest_name=$(top_field name)
 manifest_version=$(top_field version)
 manifest_source_root=$(runtime_field source_root)
 manifest_target_root=$(runtime_field target_root)
+bootstrap_source=$(bootstrap_field source)
+bootstrap_target=$(bootstrap_field target)
+bootstrap_owner=$(bootstrap_field owner)
+bootstrap_update_policy=$(bootstrap_field update_policy)
+bootstrap_conflict_policy=$(bootstrap_field conflict_policy)
 
 [ -n "$manifest_name" ] && [ -n "$manifest_version" ] || {
   error "manifest name or version is missing"
@@ -101,6 +122,32 @@ manifest_target_root=$(runtime_field target_root)
 }
 [ -n "$manifest_source_root" ] && [ -n "$manifest_target_root" ] || {
   error "manifest runtime roots are missing"
+  exit "$INVALID_MANIFEST"
+}
+[ -n "$bootstrap_source" ] && [ -n "$bootstrap_target" ] || {
+  error "manifest bootstrap source or target is missing"
+  exit "$INVALID_MANIFEST"
+}
+[ "$bootstrap_owner" = "harness" ] &&
+  [ "$bootstrap_update_policy" = "managed" ] &&
+  [ "$bootstrap_conflict_policy" = "abort_on_user_change" ] || {
+    error "manifest bootstrap policy is invalid"
+    exit "$INVALID_MANIFEST"
+  }
+case "$bootstrap_source" in
+  /*|..|../*|*/../*)
+    error "invalid bootstrap source path: $bootstrap_source"
+    exit "$INVALID_MANIFEST"
+    ;;
+esac
+case "$bootstrap_target" in
+  /*|..|../*|*/../*)
+    error "invalid bootstrap target path: $bootstrap_target"
+    exit "$INVALID_MANIFEST"
+    ;;
+esac
+[ -f "$SOURCE_ROOT/$bootstrap_source" ] || {
+  error "bootstrap source not found: $bootstrap_source"
   exit "$INVALID_MANIFEST"
 }
 
@@ -181,10 +228,11 @@ while IFS= read -r adapter; do
     error "unsupported Adapter: $adapter"
     exit "$UNSUPPORTED_ADAPTER"
   }
-  [ -n "$source" ] && [ -n "$target" ] || {
-    error "stable Adapter is incomplete in Manifest: $adapter"
+  if { [ -n "$source" ] && [ -z "$target" ]; } || { [ -z "$source" ] && [ -n "$target" ]; }; then
+    error "stable Adapter entry point is incomplete in Manifest: $adapter"
     exit "$INVALID_MANIFEST"
-  }
+  fi
+  [ -n "$source" ] || continue
   case "$source:$target" in
     /*:*|*:/../*|*:/..|../*:*)
       error "invalid Adapter path: $adapter"
@@ -233,6 +281,7 @@ add_tree() {
 }
 
 : > "$TMP_DIR/managed-files"
+printf '%s\t%s\n' "$SOURCE_ROOT/$bootstrap_source" "$bootstrap_target" >> "$TMP_DIR/managed-files"
 while IFS="$(printf '\t')" read -r source target; do
   add_tree "$SOURCE_ROOT/$source" "$target"
 done < "$TMP_DIR/mappings"
@@ -259,6 +308,18 @@ mkdir -p "$TARGET/$manifest_target_root" || {
   error "cannot create runtime directory"
   exit "$GENERAL_ERROR"
 }
+
+for state_relative in state/approvals state/checkpoints/tasks; do
+  state_directory="$TARGET/$manifest_target_root/$state_relative"
+  if [ -e "$state_directory" ] && [ ! -d "$state_directory" ]; then
+    error "runtime state target is a file: $state_relative"
+    exit "$INVALID_TARGET"
+  fi
+  mkdir -p "$state_directory" || {
+    error "cannot initialize runtime state directory: $state_relative"
+    exit "$PARTIAL_FAILURE"
+  }
+done
 
 while IFS="$(printf '\t')" read -r source_file relative_target; do
   destination="$TARGET/$relative_target"

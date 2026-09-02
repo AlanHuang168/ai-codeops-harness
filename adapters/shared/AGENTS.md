@@ -24,7 +24,7 @@ Compatibility（兼容期）: during the current migration the legacy root conte
 
 Before starting a development task:
 
-1. Read the Project Context（项目上下文）entry: `docs/project/PROJECT.md`, and the AI adapter file for the agent in use.
+1. Read the Project Context（项目上下文）entry: `docs/project/PROJECT.md`, and the tool-specific adapter file when one exists.
 2. Identify the target subsystem.
 3. Read the target subsystem's relevant:
 

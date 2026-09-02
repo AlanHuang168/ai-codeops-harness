@@ -19,6 +19,9 @@ Engineering Governance（工程治理）、Context Engineering（上下文工程
 Workflow Routing（工作流路由）和 Runtime Recovery（运行时恢复）组织成一套
 可复用的 Harness，而不是一组孤立的 Prompt。
 
+当前实现是 File / Protocol Driven Harness（文件 / 协议驱动 Harness），由 AI
+Coding Tool 读取并执行协议文件；它不是 Resident Runtime Engine（常驻运行时引擎）。
+
 Harness 提供 Bootstrap、Router、Resume Protocol（恢复协议）、Progressive
 Disclosure（渐进式披露）、Role / Rule / Workflow、Checkpoint（检查点）、
 Handoff（交接）以及 AI Coding Tool Adapter（AI 编程工具适配器）。SDD、TDD
@@ -63,8 +66,8 @@ Development Workflow
    ▼
 Project Code / Tests / Docs
 ```
-## 工程控制平面   
-                
+## 工程控制平面
+
 ```
                     Developer
                         │
@@ -107,11 +110,15 @@ ai-codeops-harness
 ```text
 user-project/
 ├── AGENTS.md
-├── CLAUDE.md
+├── CLAUDE.md                 # 选择 claude-code 时安装
 └── .ai/
     ├── rules/
     ├── roles/
     ├── workflows/
+    ├── state/
+    │   ├── approvals/
+    │   └── checkpoints/
+    │       └── tasks/
     └── VERSION
 ```
 
@@ -148,14 +155,15 @@ cd your-project
        width="100%" />
 </p>
 
-不指定 `--target` 时使用当前目录。可重复指定 Adapter：
+不指定 `--target` 时使用当前目录。一个 `--adapter` 可以选择多个 Adapter：
 
 ```bash
 /path/to/ai-codeops-harness/installer/install.sh \
   --target /path/to/your-project \
-  --adapter codex \
-  --adapter claude-code
+  --adapter codex claude-code
 ```
+
+为保持兼容，也支持重复传入 `--adapter`。
 
 ### Windows PowerShell
 
@@ -211,6 +219,10 @@ Qwen、DeepSeek 等模型不会单独建立 Harness Adapter。
 - **Bootstrap（启动）**：从工具入口进入 Harness，建立最小执行上下文。
 - **Router（路由）**：根据需求、架构、计划和实现状态选择安全 Workflow 阶段。
 - **Resume Protocol（恢复协议）**：从 State、Checkpoint 和 Current Reality 恢复中断任务。
+- **Continuous PLAN Execution（计划连续执行）**：PLAN 一次批准后连续执行范围内的 READY Task，直到完成或触发真实 Human Gate。
+- **Human Gate（人工门禁）**：只处理架构、范围、风险、破坏性操作和显式决策；Task 完成本身不是门禁。
+- **Machine-Readable Approval（机器可读审批）**：把 Human Approval 持久化为 `.ai/state/approvals/` 下的 Runtime Fact。
+- **Historical Reconciliation（历史对账）**：恢复前对账旧 Checkpoint，避免恢复已解决或被替代的工作。
 - **Authority Model（权威模型）**：区分 Harness 规则、协议、Project Context 和 Runtime Facts。
 - **Progressive Disclosure（渐进式披露）**：只加载完成当前任务所需的最小上下文。
 - **Runtime Recovery（运行时恢复）**：在 Session、AI 或 Token 限额中断后低成本继续执行。

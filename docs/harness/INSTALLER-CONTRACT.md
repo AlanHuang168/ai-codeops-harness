@@ -2,7 +2,7 @@
 
 This document defines the cross-platform behavior for the Installer. The
 current implementation provides macOS/Linux and Windows first-install paths;
-it does not implement update or a CLI.
+it does not implement update, uninstall, or rollback.
 
 ## Source and Runtime
 
@@ -26,14 +26,18 @@ For a first installation, the Installer must:
 1. Load and validate `manifest/harness.yaml`.
 2. Resolve the target project root.
 3. Read Adapter Registry entries from the Manifest.
-4. Install the selected stable Adapters.
-5. Map `src/rules`, `src/roles`, and `src/workflows` to `.ai/`.
-6. Apply the Conflict Strategy before writing each target.
-7. Write `.ai/VERSION`.
-8. Verify the installed layout.
+4. Resolve the common Bootstrap, Core mappings, and selected stable Adapters.
+5. Apply the Conflict Strategy before writing any managed target.
+6. Initialize `.ai/state/approvals/` and `.ai/state/checkpoints/tasks/`.
+7. Install the common `AGENTS.md` Bootstrap declared by the Manifest.
+8. Map `src/rules`, `src/roles`, and `src/workflows` to `.ai/`.
+9. Install the selected Adapter entry files, when present.
+10. Write `.ai/VERSION`.
+11. Verify the installed layout.
 
-Harness Core is installed once. Adapters are independently selectable and may
-be installed together.
+The common Bootstrap and Harness Core are installed once. Runtime Adapters are
+independently selectable and may be installed together. An Adapter may rely on
+the common Bootstrap without owning another entry file.
 
 ## Update
 
@@ -61,9 +65,12 @@ conflict_policy: abort_on_user_change
 Runtime ownership categories are:
 
 - `Harness-owned`: files generated from Runtime Mappings.
+- `Harness Bootstrap`: the common `AGENTS.md` declared by the Manifest.
 - `Adapter-owned`: files generated from a selected Adapter.
 - `User-owned`: existing, modified, or unknown files not recorded as managed.
-- `Generated runtime`: `.ai/VERSION` and installer metadata.
+- `Generated runtime`: `.ai/VERSION`, installer metadata, and `.ai/state/`
+  directories. Approval, Checkpoint, and other state files created during
+  execution are Runtime Facts and are not managed-file checksum entries.
 
 Ownership is determined from the recorded file path and SHA-256, not from
 timestamps or file naming assumptions.
@@ -146,7 +153,13 @@ must not write Secrets into backup metadata.
 ## Adapter Selection
 
 The Installer reads all selectable entries from `adapters` in the Manifest.
-It must not hard-code the Adapter list. Multiple Adapters may be selected.
+It must not hard-code the Adapter list. Multiple Adapters may be selected with
+one multi-value option, for example `--adapter codex claude-code`. Repeated
+`--adapter` options remain compatible.
+
+The Manifest declares the common Bootstrap separately from Adapter selection.
+The Installer always installs this Bootstrap. A stable Adapter may omit
+`source` and `target` when the common Bootstrap is its complete entry point.
 
 Models are not Adapters. Model names such as GPT, Claude, Gemini, Qwen, or
 DeepSeek do not receive separate Harness Adapter entries.
@@ -186,7 +199,9 @@ START
   -> CLASSIFY_OWNERSHIP
   -> DETECT_CONFLICTS
        -> BACKUP / MERGE / ABORT
-       -> INSTALL_CORE
+  -> INITIALIZE_RUNTIME_STATE
+  -> INSTALL_BOOTSTRAP
+  -> INSTALL_CORE
   -> INSTALL_ADAPTERS
   -> WRITE_VERSION
   -> VERIFY_LAYOUT

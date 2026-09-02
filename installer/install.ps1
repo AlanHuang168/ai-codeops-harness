@@ -55,6 +55,7 @@ function Read-Manifest([string]$Path) {
         name = $null
         version = $null
         runtime = @{}
+        bootstrap = @{}
         mappings = New-Object System.Collections.ArrayList
         adapters = @{}
     }
@@ -80,6 +81,10 @@ function Read-Manifest([string]$Path) {
             $section = 'runtime'
             continue
         }
+        if ($line -match '^bootstrap:\s*$') {
+            $section = 'bootstrap'
+            continue
+        }
         if ($line -match '^mappings:\s*$') {
             $section = 'mappings'
             $currentMapping = $null
@@ -93,6 +98,10 @@ function Read-Manifest([string]$Path) {
 
         if ($section -eq 'runtime' -and $line -match '^  ([A-Za-z0-9_-]+):\s*(\S+)\s*$') {
             $manifest.runtime[$Matches[1]] = $Matches[2]
+            continue
+        }
+        if ($section -eq 'bootstrap' -and $line -match '^  ([A-Za-z0-9_-]+):\s*(\S+)\s*$') {
+            $manifest.bootstrap[$Matches[1]] = $Matches[2]
             continue
         }
 
@@ -136,8 +145,21 @@ function Read-Manifest([string]$Path) {
         [string]::IsNullOrWhiteSpace($manifest.version) -or
         [string]::IsNullOrWhiteSpace($manifest.runtime['source_root']) -or
         [string]::IsNullOrWhiteSpace($manifest.runtime['target_root']) -or
+        [string]::IsNullOrWhiteSpace($manifest.bootstrap['source']) -or
+        [string]::IsNullOrWhiteSpace($manifest.bootstrap['target']) -or
         $manifest.mappings.Count -eq 0) {
         throw 'required Manifest field is missing'
+    }
+
+    foreach ($field in @('owner', 'update_policy', 'conflict_policy')) {
+        if ([string]::IsNullOrWhiteSpace($manifest.bootstrap[$field])) {
+            throw "bootstrap field is missing: $field"
+        }
+    }
+    if ($manifest.bootstrap.owner -ne 'harness' -or
+        $manifest.bootstrap.update_policy -ne 'managed' -or
+        $manifest.bootstrap.conflict_policy -ne 'abort_on_user_change') {
+        throw 'bootstrap policy is invalid'
     }
 
     foreach ($mapping in $manifest.mappings) {
@@ -164,10 +186,12 @@ function Read-Manifest([string]$Path) {
             $entry.Value.conflict_policy -ne 'abort_on_user_change') {
             throw "adapter policy is invalid: $($entry.Key)"
         }
-        if ($entry.Value.status -eq 'stable' -and
-            ([string]::IsNullOrWhiteSpace($entry.Value.source) -or
-             [string]::IsNullOrWhiteSpace($entry.Value.target))) {
-            throw "stable adapter is incomplete: $($entry.Key)"
+        if ($entry.Value.status -eq 'stable') {
+            $hasSource = -not [string]::IsNullOrWhiteSpace($entry.Value.source)
+            $hasTarget = -not [string]::IsNullOrWhiteSpace($entry.Value.target)
+            if ($hasSource -ne $hasTarget) {
+                throw "stable adapter entry point is incomplete: $($entry.Key)"
+            }
         }
     }
 
@@ -240,6 +264,21 @@ try {
     }
 
     $managedFiles = New-Object System.Collections.ArrayList
+    $bootstrapSource = Normalize-RelativePath $manifest.bootstrap.source
+    $bootstrapTarget = Normalize-RelativePath $manifest.bootstrap.target
+    if (-not (Test-RelativePath $bootstrapSource) -or
+        -not (Test-RelativePath $bootstrapTarget)) {
+        Fail $INVALID_MANIFEST 'invalid bootstrap path'
+    }
+    $bootstrapSourcePath = Join-ProjectPath $repositoryRoot $bootstrapSource
+    if (-not (Test-Path -LiteralPath $bootstrapSourcePath -PathType Leaf)) {
+        Fail $INVALID_MANIFEST "bootstrap source not found: $bootstrapSource"
+    }
+    [void]$managedFiles.Add([PSCustomObject]@{
+        Source = $bootstrapSourcePath
+        Target = $bootstrapTarget
+    })
+
     foreach ($mapping in $manifest.mappings) {
         $mappingSource = Normalize-RelativePath $mapping.source
         $mappingTarget = Normalize-RelativePath $mapping.target
@@ -281,6 +320,10 @@ try {
         $adapterEntry = $manifest.adapters[$adapterName]
         if ($adapterEntry.status -ne 'stable') {
             Fail $UNSUPPORTED_ADAPTER "Adapter is not stable: $adapterName"
+        }
+        if ([string]::IsNullOrWhiteSpace($adapterEntry.source) -and
+            [string]::IsNullOrWhiteSpace($adapterEntry.target)) {
+            continue
         }
         $adapterSource = Normalize-RelativePath $adapterEntry.source
         $adapterTarget = Normalize-RelativePath $adapterEntry.target
@@ -325,6 +368,18 @@ try {
         Fail $INVALID_TARGET "runtime target is a file: $targetRootRelative"
     }
     New-Item -ItemType Directory -Path $runtimeDirectory -Force | Out-Null
+
+    foreach ($stateRelative in @('state/approvals', 'state/checkpoints/tasks')) {
+        try {
+            $stateDirectory = Join-ProjectPath $runtimeDirectory $stateRelative
+            if (Test-Path -LiteralPath $stateDirectory -PathType Leaf) {
+                Fail $INVALID_TARGET "runtime state target is a file: $stateRelative"
+            }
+            New-Item -ItemType Directory -Path $stateDirectory -Force | Out-Null
+        } catch {
+            Fail $PARTIAL_FAILURE "cannot initialize runtime state directory: $stateRelative"
+        }
+    }
 
     foreach ($entry in $managedFiles) {
         try {

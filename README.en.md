@@ -21,6 +21,9 @@ Coding Agents. It combines Engineering Governance, Context Engineering,
 Workflow Routing, and Runtime Recovery into a reusable Harness rather than a
 collection of standalone prompts.
 
+The current implementation is a File / Protocol Driven Harness executed by an
+AI Coding Tool. It is not a Resident Runtime Engine.
+
 The Harness provides Bootstrap, Router, Resume Protocol, Progressive
 Disclosure, Roles / Rules / Workflows, Checkpoints, Handoff, and AI Coding
 Tool Adapters. SDD, TDD, and SDD + TDD are Development Methods / Workflows the
@@ -83,11 +86,15 @@ After installation into a target project:
 ```text
 user-project/
 ├── AGENTS.md
-├── CLAUDE.md
+├── CLAUDE.md                 # installed when claude-code is selected
 └── .ai/
     ├── rules/
     ├── roles/
     ├── workflows/
+    ├── state/
+    │   ├── approvals/
+    │   └── checkpoints/
+    │       └── tasks/
     └── VERSION
 ```
 
@@ -119,15 +126,16 @@ cd your-project
 /path/to/ai-codeops-harness/installer/install.sh --target . --adapter codex
 ```
 
-Omit `--target` to use the current directory. Select multiple adapters by
-repeating the option:
+Omit `--target` to use the current directory. One `--adapter` option accepts
+multiple adapter names:
 
 ```bash
 /path/to/ai-codeops-harness/installer/install.sh \
   --target /path/to/your-project \
-  --adapter codex \
-  --adapter claude-code
+  --adapter codex claude-code
 ```
+
+Repeated `--adapter` options remain supported for compatibility.
 
 ### Windows PowerShell
 
@@ -181,6 +189,10 @@ Harness Adapters.
 - **Bootstrap**: enters the Harness through a tool adapter and establishes the minimum context.
 - **Router**: selects the safest Workflow stage from requirements, architecture, plan, and implementation state.
 - **Resume Protocol**: recovers interrupted work from State, Checkpoints, and Current Reality.
+- **Continuous PLAN Execution**: continues READY Tasks after one PLAN approval until completion or a real Human Gate.
+- **Human Gate**: handles architecture, scope, risk, destructive actions, and explicit decisions; Task completion is not a gate.
+- **Machine-Readable Approval**: persists Human Approval as a Runtime Fact under `.ai/state/approvals/`.
+- **Historical Reconciliation**: reconciles old Checkpoints before Resume so resolved or superseded work is not reactivated.
 - **Authority Model**: separates Harness rules, protocols, Project Context, and Runtime Facts.
 - **Progressive Disclosure**: loads only the context required for the current task.
 - **Runtime Recovery**: enables low-cost continuation after Session, AI, or Token-limit interruption.
