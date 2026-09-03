@@ -177,6 +177,38 @@ After the ADR is Accepted, check and sync:
 
 Update only affected content.
 
+### 10. Architecture Fitness Functions（架构适应度函数）
+
+An Accepted ADR should, when practical, produce one or more **Architecture
+Fitness Functions（架构适应度函数）**: verifiable constraints that keep the
+decision from silently eroding over time.
+
+A fitness function turns an architecture decision into a repeatable check, the
+same way EVAL turns a business requirement into a measurable one. Examples of a
+constraint（约束）: "module A must not import module B", "external calls go only
+through the adapter boundary", "P95 latency < target". The harness defines the
+**shape**; the concrete constraint and its command are project inputs, resolved
+on demand like Project Context.
+
+```yaml
+fitness_functions:
+  - id: AFF-<ADR-id>-<n>
+    constraint: <verifiable architecture constraint>
+    measurement: <command / tool / check that verifies it>
+    result: <PASS | FAIL | NOT_RUN | BLOCKED>
+```
+
+Rules:
+
+- Fitness functions are **optional**; an ADR without them is still valid, and
+  legacy ADRs are not required to backfill them.
+- A fitness function shares the EVAL result enum and evidence rules（see
+  `eval.md`）. `NOT_RUN` must not be reported as `PASS`.
+- A `FAIL` fitness function is an executable signal of Architecture Drift
+  （架构漂移）: IMPL routes it to `ARCHITECTURE_DRIFT` / `APPROVAL_REQUIRED`,
+  not a silent in-scope fix.
+- Do not embed a specific project's constraints or commands into the harness.
+
 ## ADR Output
 
 At minimum:
@@ -192,6 +224,7 @@ At minimum:
 9. Risks
 10. Supersedes / Related ADR
 11. Documentation Impact
+12. Architecture Fitness Functions（架构适应度函数），when practical, else `N/A`
 
 ## Forbidden
 

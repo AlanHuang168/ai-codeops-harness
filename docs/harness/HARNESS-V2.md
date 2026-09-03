@@ -446,11 +446,21 @@ acceptance:
   business:       # EVAL-level: effect / output quality; see src/rules/eval.md
     - expected fixture outputs match
     - latency target satisfied
+  architecture:   # optional; Architecture Fitness Functions; see src/workflows/adr.md
+    - AFF-ADR-0005-1 holds
 ```
 
-Review must not pass while a declared acceptance item is unmet or its EVAL
-result is `FAIL`. Detailed EVAL logs stay out of State（状态）; only minimal
-Validation Summary（验证摘要） is stored, consistent with the evidence rules.
+The optional `architecture` dimension holds Architecture Fitness Functions
+（架构适应度函数） declared by an Accepted ADR. It is present for Architecture Path
+（架构路径） changes and absent for Fast / Standard changes; when absent, behavior
+is unchanged. A `FAIL` fitness function is an executable signal of Architecture
+Drift（架构漂移） and routes to the existing `ARCHITECTURE_DRIFT` /
+`APPROVAL_REQUIRED` terminal state, not a silent in-scope fix.
+
+Review must not pass while a declared acceptance item is unmet or its EVAL /
+fitness result is `FAIL`. Detailed EVAL logs stay out of State（状态）; only
+minimal Validation Summary（验证摘要） is stored, consistent with the evidence
+rules.
 
 ## Checkpoint Schema（检查点模型）
 

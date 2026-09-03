@@ -7,9 +7,11 @@
 ## 🏗️ Architecture Overview
 
 <p align="center">
-  <img src="./assets/images/architecture-overview.png"
-       alt="AI CodeOps Harness Architecture"
-       width="100%" />
+  <img
+    src="./assets/images/architecture-overview.svg"
+    alt="AI CodeOps Harness Architecture Overview"
+    width="100%"
+  />
 </p>
 
 AI CodeOps Harness sits between the AI Coding Tool and the project, providing
@@ -106,12 +108,14 @@ are not part of this source repository.
 ## 🚀 How It Works
 
 <p align="center">
-  <img src="./assets/images/how-it-works-token-efficiency.png"
-       alt="AI CodeOps Harness Workflow and Token Efficiency"
-       width="100%" />
+  <img
+    src="./assets/images/how-it-works-token-efficiency.svg"
+    alt="How AI CodeOps Harness Works"
+    width="100%"
+  />
 </p>
 
-> **About token efficiency:** Harness uses progressive disclosure and selective context loading to reduce unnecessary context loading. This describes the design mechanism and optimization goal rather than a guaranteed percentage of token savings; quantitative benchmarks are planned.
+> **About token efficiency:** Harness uses progressive disclosure, selective context loading, and checkpoint/resume to reduce irrelevant context and repeated recovery overhead. This describes the design mechanism and optimization goal rather than a guaranteed token-saving percentage; quantitative benchmarking is still planned.
 
 ## Installation
 
@@ -191,6 +195,7 @@ Harness Adapters.
 - **Change Risk Router**: classifies a change into Fast / Standard / Architecture paths first, deciding the strength of the Root Cause Gate, EVAL, Acceptance Contract, and Release Gate, then hands off to the Router for stage selection.
 - **Root Cause Gate**: a bug fix must state Symptom → Root Cause → Why tests missed it → Fix Strategy → Regression Protection before any high-impact change.
 - **TEST / EVAL Separation**: TEST verifies code and contracts; EVAL verifies business effect. Parser / algorithm / AI / rule-engine / recommendation changes must run the regression dataset; `pytest passed` alone is not proof of business correctness.
+- **Architecture Fitness Function**: an Accepted ADR produces verifiable architecture constraints that run during the Architecture Path Verify step; a FAIL is Architecture Drift, preventing architecture from eroding over time.
 - **Acceptance Contract**: every task declares Technical + Business acceptance items that Review must verify before passing.
 - **Release Gate**: deployable projects separate Code Done from Delivery Done, checking README, health check, deployment, upgrade, rollback, smoke test, and runtime config.
 - **Resume Protocol**: recovers interrupted work from State, Checkpoints, and Current Reality.

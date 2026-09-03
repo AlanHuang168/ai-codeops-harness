@@ -6,8 +6,11 @@ Separate **TEST（测试）** from **EVAL（效果评估）** and define a gener
 project-agnostic Eval Contract.
 
 - TEST verifies that code, interfaces, exceptions, and contracts are correct.
-- EVAL verifies that the change produces the required business effect on a
-  dataset.
+- EVAL verifies **effect**, in two categories that share one result enum:
+  - **Business effect（业务效果）** — the change produces the required outcome on
+    a dataset.
+  - **Architecture fitness（架构适应度）** — the change keeps an Accepted ADR's
+    architecture constraints intact（see `Architecture Fitness` below）.
 
 Apply EVAL when a task changes the behavior of a subsystem whose correctness is
 an **effect** rather than only a code path: parser, algorithm, AI / model, rule
@@ -72,6 +75,31 @@ Rules:
 
 If a project has no regression dataset for an effect-bearing subsystem, record
 that gap as a Follow-up rather than declaring business correctness on TEST alone.
+
+## Architecture Fitness（架构适应度）
+
+Architecture Fitness Functions（架构适应度函数） are declared by Accepted ADRs
+（see `adr.md`）and verified here as the architecture category of EVAL. They keep
+an architecture decision from silently eroding.
+
+```yaml
+fitness_functions:
+  - id: AFF-<ADR-id>-<n>
+    constraint: <verifiable architecture constraint>
+    measurement: <command / tool / check that verifies it>
+    result: <PASS | FAIL | NOT_RUN | BLOCKED>
+```
+
+Rules:
+
+- On an Architecture Path（架构路径） change, run the fitness functions affected
+  by the change; report each `result` at its actual evidence level.
+- A `FAIL` is an executable signal of Architecture Drift（架构漂移）: route to
+  `ARCHITECTURE_DRIFT` / `APPROVAL_REQUIRED`, do not silently patch it in scope.
+- The constraint and its command are project inputs, resolved on demand like
+  Project Context. The harness never carries a specific project's constraints.
+- Fitness functions are optional; a change with none records architecture
+  fitness as `N/A`.
 
 ## Acceptance Contract — Business Half（验收契约 · 业务）
 

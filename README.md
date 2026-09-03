@@ -7,9 +7,11 @@
 ## 🏗️ 整体架构
 
 <p align="center">
-  <img src="./assets/images/architecture-overview.png"
-       alt="AI CodeOps Harness Architecture"
-       width="100%" />
+  <img
+    src="./assets/images/architecture-overview.svg"
+    alt="AI CodeOps Harness Architecture Overview"
+    width="100%"
+  />
 </p>
 
 AI CodeOps Harness 位于 AI Coding Tool 与项目工程之间，提供统一的工程治理、上下文、工作流、恢复和多工具适配能力。
@@ -129,12 +131,14 @@ Context（项目上下文）不属于本仓库源码。
 ## 🚀 Harness 如何工作？
 
 <p align="center">
-  <img src="./assets/images/how-it-works-token-efficiency.png"
-       alt="AI CodeOps Harness Workflow and Token Efficiency"
-       width="100%" />
+  <img
+    src="./assets/images/how-it-works-token-efficiency.svg"
+    alt="How AI CodeOps Harness Works"
+    width="100%"
+  />
 </p>
 
-> **关于 Token 效率：** Harness 通过 Progressive Disclosure（渐进式披露）和按需上下文加载减少无关 Context 的重复加载。当前描述表达的是设计机制和优化目标，并非固定比例的 Token 节省承诺；后续将通过 Benchmark 提供量化数据。
+> **关于 Token 效率：** Harness 通过 Progressive Disclosure（渐进式披露）、按需上下文加载和 Checkpoint / Resume 减少无关上下文与重复恢复成本。这里描述的是设计机制和优化目标，并非固定比例的 Token 节省承诺；量化 Benchmark 仍在规划中。
 
 ## 安装
 
@@ -221,6 +225,7 @@ Qwen、DeepSeek 等模型不会单独建立 Harness Adapter。
 - **Change Risk Router（变更风险路由）**：先按风险把变更分为 Fast / Standard / Architecture 三条路径，决定 Root Cause Gate、EVAL、Acceptance Contract 和 Release Gate 的门禁强度，再交给 Router 选阶段。
 - **Root Cause Gate（根因门禁）**：Bug 修复在高影响改动前必须说明 Symptom → Root Cause → Why tests missed → Fix Strategy → Regression Protection。
 - **TEST / EVAL 分离**：TEST 验证代码与契约，EVAL 验证业务效果；parser / algorithm / AI / rule-engine / recommendation 变更必须运行回归数据集，`pytest passed` 不作为业务正确性的唯一证明。
+- **Architecture Fitness Function（架构适应度函数）**：Accepted ADR 产出可验证的架构约束，在 Architecture Path 的 Verify 中运行；FAIL 即架构漂移，防止架构随时间腐化。
 - **Acceptance Contract（验收契约）**：每个任务声明 Technical + Business 验收项，Review 通过前必须验证。
 - **Release Gate（发布门禁）**：可部署项目区分 Code Done 与 Delivery Done，检查 README、health check、部署、升级、回滚、smoke test 与 runtime config。
 - **Resume Protocol（恢复协议）**：从 State、Checkpoint 和 Current Reality 恢复中断任务。

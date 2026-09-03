@@ -107,6 +107,9 @@ Reality
 - Maps to: ADR -> PLAN -> Approval Record -> IMPL, plus Release Gate（see
   `release.md`）when the project is deployable.
 - Human Approval at key nodes: ADR acceptance, PLAN approval, and Release Gate.
+- Verify runs the ADR's Architecture Fitness Functions（架构适应度函数, see
+  `adr.md` and `eval.md`）; a `FAIL` is Architecture Drift and routes to
+  `ARCHITECTURE_DRIFT` / `APPROVAL_REQUIRED`.
 - Irreversible operations keep their existing Human Gate regardless of tier.
 
 ## Risk Tier to Approval Mapping（风险分级与审批映射）

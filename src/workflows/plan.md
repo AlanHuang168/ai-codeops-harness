@@ -193,10 +193,15 @@ acceptance:
   business:
     - expected fixture outputs match
     - latency target satisfied
+  architecture:          # optional; Architecture Path changes with fitness functions
+    - AFF-ADR-0005-1 holds
 ```
 
 - Technical items are TEST-level (code, interface, exception, contract).
 - Business items are EVAL-level (effect / output quality); see `eval.md`.
+- Architecture items are Architecture Fitness Functions（架构适应度函数）declared
+  by an Accepted ADR; include them for Architecture Path（架构路径） changes. The
+  section is optional and defaults to absent for Fast / Standard changes.
 - If the change is not effect-bearing, the business section may be `N/A` with a
   one-line reason.
 

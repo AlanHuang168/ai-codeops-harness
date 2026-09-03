@@ -164,6 +164,15 @@ model, rule engine, or recommendation — run EVAL per `eval.md` after Validate:
 When the Task is not effect-bearing, record EVAL as `N/A` with a one-line reason.
 Do not fabricate a metric.
 
+On an Architecture Path（架构路径） change, also run the Architecture Fitness
+Functions（架构适应度函数） affected by the change (see `eval.md` and `adr.md`):
+
+- Run the fitness functions declared by the relevant Accepted ADR; report each
+  `result` at its actual evidence level.
+- A `FAIL` fitness function is Architecture Drift（架构漂移）: STOP and route to
+  `ARCHITECTURE_DRIFT` / `APPROVAL_REQUIRED`; do not silently patch it in scope.
+- When no fitness function applies, record architecture fitness as `N/A`.
+
 ### 5. Review
 
 Review from the perspectives relevant to the current Task:
@@ -187,12 +196,17 @@ acceptance:
     - <technical acceptance item>
   business:
     - <business acceptance item, or N/A>
+  architecture:
+    - <fitness function id holds, or N/A>
 ```
 
 - Technical Acceptance（技术验收） maps to TEST results.
 - Business Acceptance（业务验收） maps to EVAL results (see `eval.md`).
+- Architecture Acceptance（架构验收） maps to Architecture Fitness Function
+  results (see `adr.md` and `eval.md`); present for Architecture Path changes,
+  otherwise `N/A`.
 - Review MUST NOT return PASS while any declared acceptance item is unmet or its
-  EVAL result is `FAIL`. An unmet acceptance item is a Blocker finding.
+  EVAL / fitness result is `FAIL`. An unmet acceptance item is a Blocker finding.
 
 ### 6. Fix
 

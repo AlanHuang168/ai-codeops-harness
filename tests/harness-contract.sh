@@ -159,7 +159,46 @@ for f in src/rules/eval.md src/rules/release.md src/workflows/risk-router.md; do
 done
 
 # ---------------------------------------------------------------------------
-# 8. Installer: fresh install + reinstall still pass, new files installed
+# 8. Architecture Fitness Function contract (ADR -> EVAL -> IMPL loop)
+# ---------------------------------------------------------------------------
+# 8a. ADR declares the fitness function schema
+if has src/workflows/adr.md "fitness_functions:" && has src/workflows/adr.md "constraint:" \
+   && has src/workflows/adr.md "measurement:" && has src/workflows/adr.md "result:"; then
+  ok "fitness function schema in adr.md"
+else
+  bad "fitness function schema in adr.md"
+fi
+# 8b. EVAL rule covers architecture fitness with the same schema
+if hasi src/rules/eval.md "Architecture Fitness" && has src/rules/eval.md "fitness_functions:"; then
+  ok "architecture fitness covered in eval.md"
+else
+  bad "architecture fitness covered in eval.md"
+fi
+# 8c. Execution workflows run fitness functions on the Architecture Path
+check "impl.md runs fitness functions" hasi src/workflows/impl.md "fitness function"
+check "risk-router.md Verify runs fitness functions" hasi src/workflows/risk-router.md "Fitness Functions"
+# 8d. FAIL fitness function is wired to ARCHITECTURE_DRIFT in ADR and IMPL
+for f in src/workflows/adr.md src/workflows/impl.md; do
+  if hasi "$f" "fitness" && has "$f" "ARCHITECTURE_DRIFT"; then
+    ok "fitness FAIL -> ARCHITECTURE_DRIFT: $f"
+  else
+    bad "fitness FAIL -> ARCHITECTURE_DRIFT: $f"
+  fi
+done
+# 8e. Acceptance Contract carries the optional architecture dimension
+for f in src/workflows/plan.md src/workflows/impl.md; do
+  check "acceptance architecture dimension: $f" has "$f" "architecture:"
+done
+# 8f. Fitness functions reuse the EVAL result enum
+if has src/workflows/adr.md "PASS" && has src/workflows/adr.md "FAIL" \
+   && has src/workflows/adr.md "NOT_RUN" && has src/workflows/adr.md "BLOCKED"; then
+  ok "fitness result enum matches EVAL (adr.md)"
+else
+  bad "fitness result enum matches EVAL (adr.md)"
+fi
+
+# ---------------------------------------------------------------------------
+# 9. Installer: fresh install + reinstall still pass, new files installed
 # ---------------------------------------------------------------------------
 TMP_TARGET=$(mktemp -d "${TMPDIR:-/tmp}/harness-contract.XXXXXX") || TMP_TARGET=""
 if [ -z "$TMP_TARGET" ]; then

@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1280" viewBox="0 0 1800 1280">
+  <defs>
+    <style>
+      .bg{fill:#070a07}
+      .panel{fill:#0b120d;stroke:#2ddc72;stroke-width:2}
+      .panel2{fill:#0d1510;stroke:#1d7f46;stroke-width:1.5}
+      .soft{fill:#0a0f0b;stroke:#33583f;stroke-width:1.2}
+      .danger{fill:#160b0b;stroke:#ff665c;stroke-width:1.7}
+      .title{font:700 34px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#f4fff7}
+      .h1{font:700 24px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#58ef8b}
+      .h2{font:700 19px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#eaffef}
+      .txt{font:15px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#d4e7d8}
+      .small{font:13px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#a9c5b0}
+      .mini{font:12px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#8fb59b}
+      .green{fill:#58ef8b}
+      .muted{fill:#86a98f}
+      .red{fill:#ff766d}
+      .tag{fill:#102318;stroke:#2ddc72;stroke-width:1}
+      .planned{fill:#17190d;stroke:#c9d83f;stroke-width:1}
+      .arrow{stroke:#58ef8b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+      .arrow2{stroke:#6da87d;stroke-width:1.5;fill:none;marker-end:url(#arrow2)}
+      .dash{stroke:#4e8a60;stroke-width:1.2;fill:none;stroke-dasharray:6 6}
+      .dangerArrow{stroke:#ff665c;stroke-width:1.7;fill:none;marker-end:url(#redArrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#58ef8b"/>
+    </marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#6da87d"/>
+    </marker>
+    <marker id="redArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#ff665c"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1800" height="1280"/>
+  <text x="50" y="58" class="title">AI CodeOps Harness — Architecture Overview / 整体架构总览</text>
+  <text x="50" y="88" class="small">Project-scoped AI Engineering Runtime · One Harness, Multiple Coding Agents · 项目级 AI 工程运行时</text>
+
+  <!-- left: coding agents -->
+  <rect x="40" y="125" width="250" height="360" rx="16" class="panel"/>
+  <text x="65" y="160" class="h1">AI CODING AGENTS</text>
+  <text x="65" y="184" class="small">AI 编码代理</text>
+
+  <rect x="65" y="210" width="200" height="48" rx="10" class="soft"/>
+  <text x="85" y="240" class="h2">Codex</text>
+  <rect x="65" y="270" width="200" height="48" rx="10" class="soft"/>
+  <text x="85" y="300" class="h2">Claude Code</text>
+  <rect x="65" y="330" width="200" height="48" rx="10" class="soft"/>
+  <text x="85" y="360" class="h2">Cursor</text>
+  <rect x="65" y="390" width="200" height="48" rx="10" class="soft"/>
+  <text x="85" y="420" class="h2">OpenCode / More</text>
+  <text x="65" y="463" class="mini">Stable: Codex, Claude Code · Others planned</text>
+
+  <!-- adapters -->
+  <rect x="330" y="125" width="230" height="360" rx="16" class="panel"/>
+  <text x="355" y="160" class="h1">ADAPTER LAYER</text>
+  <text x="355" y="184" class="small">适配器层</text>
+  <rect x="355" y="210" width="180" height="56" rx="10" class="panel2"/>
+  <text x="373" y="238" class="h2">AGENTS.md</text>
+  <text x="373" y="256" class="mini">Codex Runtime Entry</text>
+  <rect x="355" y="280" width="180" height="56" rx="10" class="panel2"/>
+  <text x="373" y="308" class="h2">CLAUDE.md</text>
+  <text x="373" y="326" class="mini">Claude Code Entry</text>
+  <rect x="355" y="350" width="180" height="56" rx="10" class="soft"/>
+  <text x="373" y="378" class="h2">More Adapters</text>
+  <text x="373" y="396" class="mini">Cursor / OpenCode / ...</text>
+  <text x="355" y="448" class="small">Thin adapters · 薄适配器</text>
+
+  <path d="M290 305 L330 305" class="arrow"/>
+  <path d="M560 305 L605 305" class="arrow"/>
+
+  <!-- main runtime core -->
+  <rect x="605" y="125" width="820" height="610" rx="18" class="panel"/>
+  <text x="635" y="160" class="h1">HARNESS RUNTIME CORE / 核心运行时</text>
+  <text x="635" y="184" class="small">File / protocol driven · AI Coding Tool executes · 非常驻 Runtime Engine</text>
+
+  <!-- top chain -->
+  <rect x="635" y="215" width="130" height="74" rx="12" class="panel2"/>
+  <text x="665" y="244" class="h2">Bootstrap</text>
+  <text x="665" y="266" class="small">启动</text>
+
+  <rect x="800" y="215" width="130" height="74" rx="12" class="panel2"/>
+  <text x="836" y="244" class="h2">Intent</text>
+  <text x="824" y="266" class="small">意图 / Scope</text>
+
+  <rect x="965" y="215" width="150" height="74" rx="12" class="panel2"/>
+  <text x="993" y="244" class="h2">Risk Router</text>
+  <text x="1001" y="266" class="small">风险路由</text>
+
+  <rect x="1150" y="215" width="150" height="74" rx="12" class="panel2"/>
+  <text x="1173" y="244" class="h2">Workflow</text>
+  <text x="1170" y="266" class="small">工作流引擎</text>
+
+  <rect x="1330" y="215" width="70" height="74" rx="12" class="panel2"/>
+  <text x="1344" y="244" class="h2">&lt;/&gt;</text>
+  <text x="1342" y="266" class="small">Change</text>
+
+  <path d="M765 252 L800 252" class="arrow"/>
+  <path d="M930 252 L965 252" class="arrow"/>
+  <path d="M1115 252 L1150 252" class="arrow"/>
+  <path d="M1300 252 L1330 252" class="arrow"/>
+
+  <!-- risk tiers -->
+  <text x="970" y="320" class="h2">Change Risk Router / 变更风险分级</text>
+  <rect x="965" y="340" width="140" height="105" rx="10" class="soft"/>
+  <text x="1008" y="370" class="h2 green">Fast</text>
+  <text x="985" y="394" class="small">Small Change</text>
+  <text x="985" y="415" class="small">Low Impact</text>
+  <text x="985" y="436" class="small">Quick Feedback</text>
+
+  <rect x="1120" y="340" width="140" height="105" rx="10" class="soft"/>
+  <text x="1152" y="370" class="h2 green">Standard</text>
+  <text x="1140" y="394" class="small">Medium Change</text>
+  <text x="1140" y="415" class="small">Moderate Impact</text>
+  <text x="1140" y="436" class="small">Balanced Control</text>
+
+  <rect x="1275" y="340" width="140" height="105" rx="10" class="soft"/>
+  <text x="1296" y="370" class="h2 green">Architecture</text>
+  <text x="1295" y="394" class="small">High Impact</text>
+  <text x="1295" y="415" class="small">Architecture Change</text>
+  <text x="1295" y="436" class="small">Full Governance</text>
+  <path d="M1040 289 L1040 340" class="arrow2"/>
+
+  <!-- context and protocols -->
+  <rect x="635" y="330" width="290" height="150" rx="12" class="panel2"/>
+  <text x="660" y="360" class="h2">Context Runtime / 上下文运行时</text>
+  <text x="660" y="386" class="txt">• Progressive Disclosure 渐进式披露</text>
+  <text x="660" y="410" class="txt">• Authority Model 权威层级</text>
+  <text x="660" y="434" class="txt">• Project Context Contract</text>
+  <text x="660" y="458" class="txt">• Load only required context</text>
+
+  <!-- verification -->
+  <rect x="635" y="510" width="545" height="175" rx="12" class="panel2"/>
+  <text x="660" y="542" class="h2">VERIFICATION &amp; GOVERNANCE / 验证与治理</text>
+
+  <rect x="660" y="565" width="115" height="88" rx="9" class="soft"/>
+  <text x="695" y="595" class="h2 green">TEST</text>
+  <text x="674" y="620" class="small">代码正确性</text>
+  <text x="678" y="640" class="mini">Tests / Static</text>
+
+  <rect x="790" y="565" width="115" height="88" rx="9" class="soft"/>
+  <text x="826" y="595" class="h2 green">EVAL</text>
+  <text x="805" y="620" class="small">业务效果</text>
+  <text x="808" y="640" class="mini">Task Outcome</text>
+
+  <rect x="920" y="565" width="115" height="88" rx="9" class="soft"/>
+  <text x="933" y="595" class="h2 green">Acceptance</text>
+  <text x="942" y="620" class="small">验收契约</text>
+  <text x="934" y="640" class="mini">Contract Check</text>
+
+  <rect x="1050" y="565" width="105" height="88" rx="9" class="soft"/>
+  <text x="1070" y="595" class="h2 green">Fitness</text>
+  <text x="1063" y="620" class="small">架构适应度</text>
+  <text x="1069" y="640" class="mini">Fitness Fn.</text>
+
+  <!-- root cause / release -->
+  <rect x="1200" y="500" width="200" height="110" rx="12" class="danger"/>
+  <text x="1235" y="532" class="h2 red">Root Cause Gate</text>
+  <text x="1258" y="556" class="small">根因门禁</text>
+  <text x="1220" y="582" class="small">Bug / Failure → analyze cause</text>
+  <path d="M1365 289 L1365 500" class="dangerArrow"/>
+
+  <rect x="1200" y="625" width="200" height="75" rx="12" class="panel2"/>
+  <text x="1224" y="655" class="h2">Approval / Release Gate</text>
+  <text x="1248" y="679" class="small">审批与发布门禁</text>
+
+  <!-- project runtime -->
+  <rect x="1460" y="125" width="300" height="610" rx="18" class="panel"/>
+  <text x="1490" y="160" class="h1">PROJECT RUNTIME</text>
+  <text x="1490" y="184" class="small">Installed Runtime · 安装后运行目录</text>
+
+  <rect x="1490" y="210" width="240" height="115" rx="12" class="panel2"/>
+  <text x="1515" y="240" class="h2">.ai/**</text>
+  <text x="1515" y="266" class="txt">rules / roles / workflows</text>
+  <text x="1515" y="290" class="txt">VERSION / managed state</text>
+  <text x="1515" y="314" class="mini">Generated by installer</text>
+
+  <rect x="1490" y="345" width="240" height="140" rx="12" class="panel2"/>
+  <text x="1515" y="375" class="h2">State Runtime / 状态运行时</text>
+  <text x="1515" y="402" class="txt">• Checkpoint</text>
+  <text x="1515" y="426" class="txt">• Resume</text>
+  <text x="1515" y="450" class="txt">• Handoff</text>
+  <text x="1515" y="474" class="mini">Cross-session recovery</text>
+
+  <rect x="1490" y="505" width="240" height="190" rx="12" class="panel2"/>
+  <text x="1515" y="535" class="h2">Core Resources / 核心资源</text>
+  <text x="1515" y="562" class="txt">Workflows: Risk Router / PRD / ADR / PLAN</text>
+  <text x="1515" y="588" class="txt">Rules: Engineering / Test / EVAL</text>
+  <text x="1515" y="614" class="txt">Rules: Security / Release</text>
+  <text x="1515" y="640" class="txt">Roles: Architect / Dev / QA / Reviewer</text>
+  <text x="1515" y="666" class="txt">Protocols: Resume / Handoff / Approval</text>
+
+  <path d="M1425 430 L1460 430" class="arrow"/>
+
+  <!-- lifecycle strip -->
+  <rect x="40" y="775" width="1720" height="210" rx="18" class="panel"/>
+  <text x="70" y="812" class="h1">RUNTIME LIFECYCLE / 运行时生命周期</text>
+  <text x="70" y="838" class="small">Request → Route → Context → Change → Verify → Gate → State → Resume</text>
+
+  <!-- lifecycle nodes -->
+  <g>
+    <rect x="70" y="865" width="150" height="72" rx="10" class="soft"/>
+    <text x="104" y="895" class="h2">Request</text><text x="103" y="919" class="small">接收请求</text>
+    <rect x="245" y="865" width="150" height="72" rx="10" class="soft"/>
+    <text x="282" y="895" class="h2">Intent</text><text x="273" y="919" class="small">意图/范围</text>
+    <rect x="420" y="865" width="150" height="72" rx="10" class="soft"/>
+    <text x="445" y="895" class="h2">Risk Tier</text><text x="450" y="919" class="small">风险分级</text>
+    <rect x="595" y="865" width="150" height="72" rx="10" class="soft"/>
+    <text x="620" y="895" class="h2">Workflow</text><text x="630" y="919" class="small">工作流</text>
+    <rect x="770" y="865" width="150" height="72" rx="10" class="soft"/>
+    <text x="790" y="895" class="h2">Context</text><text x="799" y="919" class="small">按需加载</text>
+    <rect x="945" y="865" width="150" height="72" rx="10" class="soft"/>
+    <text x="967" y="895" class="h2">Change</text><text x="965" y="919" class="small">实现变更</text>
+    <rect x="1120" y="865" width="180" height="72" rx="10" class="soft"/>
+    <text x="1144" y="895" class="h2">TEST · EVAL</text><text x="1150" y="919" class="small">验收 / Fitness</text>
+    <rect x="1325" y="865" width="180" height="72" rx="10" class="soft"/>
+    <text x="1340" y="895" class="h2">Release Gate</text><text x="1360" y="919" class="small">审批发布</text>
+    <rect x="1530" y="865" width="190" height="72" rx="10" class="soft"/>
+    <text x="1545" y="895" class="h2">Checkpoint</text><text x="1550" y="919" class="small">Handoff / Resume</text>
+
+    <path d="M220 901 L245 901" class="arrow"/>
+    <path d="M395 901 L420 901" class="arrow"/>
+    <path d="M570 901 L595 901" class="arrow"/>
+    <path d="M745 901 L770 901" class="arrow"/>
+    <path d="M920 901 L945 901" class="arrow"/>
+    <path d="M1095 901 L1120 901" class="arrow"/>
+    <path d="M1300 901 L1325 901" class="arrow"/>
+    <path d="M1505 901 L1530 901" class="arrow"/>
+  </g>
+
+  <!-- bottom split -->
+  <rect x="40" y="1020" width="850" height="220" rx="18" class="panel"/>
+  <text x="70" y="1057" class="h1">GOVERNANCE CONTROLS / 治理控制机制</text>
+  <text x="70" y="1090" class="txt">• Change Risk Router — Fast / Standard / Architecture</text>
+  <text x="70" y="1120" class="txt">• Root Cause Gate — bug / failure must establish cause before fix</text>
+  <text x="70" y="1150" class="txt">• TEST / EVAL Separation — correctness ≠ task outcome</text>
+  <text x="70" y="1180" class="txt">• Acceptance Contract — explicit completion criteria</text>
+  <text x="70" y="1210" class="txt">• Release Gate + Architecture Fitness Function</text>
+
+  <rect x="920" y="1020" width="840" height="220" rx="18" class="panel"/>
+  <text x="950" y="1057" class="h1">SOURCE / RUNTIME BOUNDARY / 源码与运行时边界</text>
+  <text x="950" y="1090" class="txt">src/** → Authoring Source（Harness 源码）</text>
+  <text x="950" y="1120" class="txt">adapters/** → AI Coding Tool Adapter Source（工具适配器源码）</text>
+  <text x="950" y="1150" class="txt">manifest/** → Unified Manifest（统一安装清单）</text>
+  <text x="950" y="1180" class="txt">installer/** → Cross-platform Installer（跨平台安装器）</text>
+  <text x="950" y="1210" class="txt">.ai/** → Installed Runtime（安装后运行目录，非 Canonical Source）</text>
+
+  <!-- footer -->
+  <text x="50" y="1265" class="mini">AI CodeOps Harness · Governance + Runtime for AI Coding Agents · Diagram intentionally avoids daemon/database/model-host claims.</text>
+</svg>

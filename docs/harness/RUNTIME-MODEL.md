@@ -351,6 +351,7 @@ The current repository has no formal sdd.md or tdd.md workflow. These are
 | Bootstrap and Router instructions | PROTOCOL-DEFINED | Adapter and src/workflows/router.md |
 | Change Risk Router and Risk Tiers | PROTOCOL-DEFINED | src/workflows/risk-router.md |
 | TEST / EVAL separation and Acceptance Contract | PROTOCOL-DEFINED | src/rules/eval.md, src/workflows/plan.md, src/workflows/impl.md |
+| Architecture Fitness Functions | PROTOCOL-DEFINED | src/workflows/adr.md, src/rules/eval.md |
 | Release / Deployment Definition of Done | PROTOCOL-DEFINED | src/rules/release.md |
 | PRD / ADR / PLAN / IMPL workflows | PROTOCOL-DEFINED | src/workflows/ |
 | Rules and Roles | PROTOCOL-DEFINED | src/rules/, src/roles/ |

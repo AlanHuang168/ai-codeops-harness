@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1460" viewBox="0 0 1800 1460">
+  <defs>
+    <style>
+      .bg{fill:#070a07}
+      .panel{fill:#0b120d;stroke:#2ddc72;stroke-width:2}
+      .panel2{fill:#0d1510;stroke:#1d7f46;stroke-width:1.5}
+      .soft{fill:#0a0f0b;stroke:#33583f;stroke-width:1.2}
+      .danger{fill:#160b0b;stroke:#ff665c;stroke-width:1.7}
+      .warn{fill:#141508;stroke:#c6d33b;stroke-width:1.4}
+      .title{font:700 34px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#f4fff7}
+      .h1{font:700 24px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#58ef8b}
+      .h2{font:700 19px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#eaffef}
+      .h3{font:700 16px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#dfffe8}
+      .txt{font:15px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#d4e7d8}
+      .small{font:13px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#a9c5b0}
+      .mini{font:12px Inter,Arial,"PingFang SC","Microsoft YaHei",sans-serif;fill:#8fb59b}
+      .green{fill:#58ef8b}
+      .red{fill:#ff766d}
+      .yellow{fill:#d8e44c}
+      .arrow{stroke:#58ef8b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+      .arrow2{stroke:#6da87d;stroke-width:1.5;fill:none;marker-end:url(#arrow2)}
+      .dangerArrow{stroke:#ff665c;stroke-width:1.7;fill:none;marker-end:url(#redArrow)}
+      .dash{stroke:#4e8a60;stroke-width:1.2;fill:none;stroke-dasharray:6 6}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#58ef8b"/>
+    </marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#6da87d"/>
+    </marker>
+    <marker id="redArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#ff665c"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1800" height="1460"/>
+  <text x="50" y="60" class="title">How AI CodeOps Harness Works / Harness 如何工作</text>
+  <text x="50" y="90" class="small">Risk-aware workflow orchestration · Progressive context loading · Verification &amp; governance · Recoverable execution</text>
+
+  <!-- SECTION 1 -->
+  <rect x="40" y="125" width="1720" height="780" rx="18" class="panel"/>
+  <text x="70" y="165" class="h1">01 · END-TO-END WORKFLOW / 端到端使用流程</text>
+  <text x="70" y="192" class="small">From user request to verified, governed, resumable engineering output / 从用户请求到可验证、可治理、可恢复的工程产出</text>
+
+  <!-- Row 1 nodes -->
+  <rect x="70" y="230" width="180" height="105" rx="12" class="panel2"/>
+  <text x="92" y="260" class="h2">1. Request</text>
+  <text x="92" y="285" class="small">接收请求</text>
+  <text x="92" y="310" class="mini">Feature / Bug / Refactor</text>
+
+  <rect x="285" y="230" width="200" height="105" rx="12" class="panel2"/>
+  <text x="308" y="260" class="h2">2. Intent &amp; Scope</text>
+  <text x="308" y="285" class="small">意图与范围</text>
+  <text x="308" y="310" class="mini">Goal / Constraints / Impact</text>
+
+  <rect x="520" y="230" width="220" height="105" rx="12" class="panel2"/>
+  <text x="544" y="260" class="h2">3. Change Risk Router</text>
+  <text x="544" y="285" class="small">变更风险路由</text>
+  <text x="544" y="310" class="mini">Select governance path first</text>
+
+  <rect x="775" y="230" width="200" height="105" rx="12" class="panel2"/>
+  <text x="798" y="260" class="h2">4. Load Context</text>
+  <text x="798" y="285" class="small">按需加载上下文</text>
+  <text x="798" y="310" class="mini">Progressive Disclosure</text>
+
+  <rect x="1010" y="230" width="210" height="105" rx="12" class="panel2"/>
+  <text x="1034" y="260" class="h2">5. Execute Workflow</text>
+  <text x="1034" y="285" class="small">执行工作流</text>
+  <text x="1034" y="310" class="mini">PRD / ADR / PLAN / Dev</text>
+
+  <rect x="1255" y="230" width="210" height="105" rx="12" class="panel2"/>
+  <text x="1280" y="260" class="h2">6. Implement Change</text>
+  <text x="1280" y="285" class="small">实施变更</text>
+  <text x="1280" y="310" class="mini">Code / Docs / Tests</text>
+
+  <rect x="1500" y="230" width="220" height="105" rx="12" class="panel2"/>
+  <text x="1524" y="260" class="h2">7. Verify &amp; Govern</text>
+  <text x="1524" y="285" class="small">验证与治理</text>
+  <text x="1524" y="310" class="mini">TEST / EVAL / Acceptance</text>
+
+  <path d="M250 282 L285 282" class="arrow"/>
+  <path d="M485 282 L520 282" class="arrow"/>
+  <path d="M740 282 L775 282" class="arrow"/>
+  <path d="M975 282 L1010 282" class="arrow"/>
+  <path d="M1220 282 L1255 282" class="arrow"/>
+  <path d="M1465 282 L1500 282" class="arrow"/>
+
+  <!-- Risk tier detail -->
+  <text x="520" y="375" class="h2">Risk Tier / 风险分级</text>
+  <rect x="520" y="395" width="200" height="78" rx="10" class="soft"/>
+  <text x="538" y="423" class="h3 green">Fast / 快速路径</text>
+  <text x="538" y="447" class="mini">Small change · low impact</text>
+  <text x="538" y="466" class="mini">Minimum necessary governance</text>
+
+  <rect x="735" y="395" width="220" height="78" rx="10" class="soft"/>
+  <text x="753" y="423" class="h3 green">Standard / 标准路径</text>
+  <text x="753" y="447" class="mini">Moderate change · normal checks</text>
+  <text x="753" y="466" class="mini">Balanced control</text>
+
+  <rect x="970" y="395" width="230" height="78" rx="10" class="soft"/>
+  <text x="988" y="423" class="h3 green">Architecture / 架构路径</text>
+  <text x="988" y="447" class="mini">High-impact structural change</text>
+  <text x="988" y="466" class="mini">Full governance + fitness</text>
+
+  <path d="M630 335 L630 395" class="arrow2"/>
+
+  <!-- Context detail -->
+  <rect x="70" y="520" width="390" height="205" rx="12" class="panel2"/>
+  <text x="95" y="552" class="h2">Context Runtime / 上下文运行时</text>
+  <text x="95" y="582" class="txt">1. Router determines what is needed</text>
+  <text x="95" y="610" class="txt">2. Load required Rules / Roles / Workflow</text>
+  <text x="95" y="638" class="txt">3. Load relevant Project Context only</text>
+  <text x="95" y="666" class="txt">4. Avoid broad, repeated context loading</text>
+  <text x="95" y="698" class="small">Progressive Disclosure（渐进式披露）</text>
+
+  <!-- Root cause detail -->
+  <rect x="495" y="520" width="320" height="205" rx="12" class="danger"/>
+  <text x="520" y="552" class="h2 red">Root Cause Gate / 根因门禁</text>
+  <text x="520" y="585" class="txt">Bug / Failure scenario:</text>
+  <text x="520" y="615" class="txt">Observe → Reproduce → Analyze</text>
+  <text x="520" y="645" class="txt">Evidence → Root Cause → Fix</text>
+  <text x="520" y="680" class="small">禁止直接“猜测原因后修复”</text>
+  <path d="M1360 335 C1360 430 1170 470 815 570" class="dangerArrow"/>
+
+  <!-- Verification detail -->
+  <rect x="850" y="520" width="555" height="205" rx="12" class="panel2"/>
+  <text x="875" y="552" class="h2">Verification &amp; Governance / 验证与治理</text>
+
+  <rect x="875" y="575" width="115" height="112" rx="9" class="soft"/>
+  <text x="908" y="605" class="h3 green">TEST</text>
+  <text x="890" y="630" class="small">代码正确性</text>
+  <text x="890" y="652" class="mini">Unit / Integration</text>
+  <text x="890" y="670" class="mini">Static Checks</text>
+
+  <rect x="1005" y="575" width="115" height="112" rx="9" class="soft"/>
+  <text x="1037" y="605" class="h3 green">EVAL</text>
+  <text x="1020" y="630" class="small">任务效果</text>
+  <text x="1020" y="652" class="mini">Outcome Quality</text>
+  <text x="1020" y="670" class="mini">Behavior Eval</text>
+
+  <rect x="1135" y="575" width="125" height="112" rx="9" class="soft"/>
+  <text x="1148" y="605" class="h3 green">Acceptance</text>
+  <text x="1155" y="630" class="small">验收契约</text>
+  <text x="1150" y="652" class="mini">Explicit Criteria</text>
+  <text x="1150" y="670" class="mini">Done Contract</text>
+
+  <rect x="1275" y="575" width="105" height="112" rx="9" class="soft"/>
+  <text x="1294" y="605" class="h3 green">Fitness</text>
+  <text x="1288" y="630" class="small">架构适应度</text>
+  <text x="1287" y="652" class="mini">Architecture</text>
+  <text x="1287" y="670" class="mini">Fitness Function</text>
+
+  <!-- Release + state -->
+  <rect x="1440" y="520" width="280" height="95" rx="12" class="panel2"/>
+  <text x="1464" y="552" class="h2">8. Approval / Release Gate</text>
+  <text x="1464" y="578" class="small">审批与发布门禁</text>
+  <text x="1464" y="598" class="mini">Risk-aware human approval where required</text>
+
+  <rect x="1440" y="630" width="280" height="95" rx="12" class="panel2"/>
+  <text x="1464" y="662" class="h2">9. Checkpoint / Handoff</text>
+  <text x="1464" y="688" class="small">保存事实 · 交接 · 可恢复</text>
+  <text x="1464" y="708" class="mini">Resume from current repository reality</text>
+
+  <path d="M1610 335 L1580 520" class="arrow2"/>
+  <path d="M1580 615 L1580 630" class="arrow"/>
+
+  <!-- example -->
+  <rect x="70" y="760" width="1650" height="105" rx="12" class="soft"/>
+  <text x="95" y="792" class="h2">Example Flow / 示例链</text>
+  <text x="95" y="825" class="txt">Intent 意图 → Risk Tier 风险分级 → Router 路由 → Workflow 工作流 → Load Context → Plan → Code → TEST → EVAL → Review → Acceptance → Approval / Release → Checkpoint</text>
+  <text x="95" y="850" class="small">Bug scenario additionally passes Root Cause Gate before implementing the fix / Bug 场景在修复前额外经过根因门禁</text>
+
+  <!-- SECTION 2 -->
+  <rect x="40" y="940" width="1720" height="445" rx="18" class="panel"/>
+  <text x="70" y="980" class="h1">02 · CONTEXT &amp; TOKEN EFFICIENCY / 上下文与 Token 效率</text>
+  <text x="70" y="1007" class="small">Mechanism and optimization goal — not a guaranteed token-saving percentage / 这是机制与优化目标，不代表固定 Token 节省比例</text>
+
+  <!-- Without -->
+  <rect x="70" y="1040" width="510" height="285" rx="14" class="danger"/>
+  <text x="95" y="1076" class="h2 red">WITHOUT HARNESS / 无 Harness</text>
+  <text x="95" y="1110" class="txt">Every request → broad context loading</text>
+  <text x="95" y="1140" class="txt">• Rules / Roles / Docs / History all mixed</text>
+  <text x="95" y="1170" class="txt">• Repeated context reload across sessions</text>
+  <text x="95" y="1200" class="txt">• Higher rule collision and context noise</text>
+  <text x="95" y="1230" class="txt">• Harder recovery after interruption</text>
+  <text x="95" y="1260" class="txt">• More rework risk when intent drifts</text>
+  <text x="95" y="1298" class="small">Load Everything → Large Context → Noise / Conflict</text>
+
+  <!-- Middle -->
+  <rect x="625" y="1040" width="520" height="285" rx="14" class="warn"/>
+  <text x="650" y="1076" class="h2 yellow">TOKEN EFFICIENCY ≠ SIMPLY FEWER TOKENS</text>
+  <text x="650" y="1110" class="txt">Token 效率不等于单纯少用 Token</text>
+  <text x="650" y="1150" class="h2">Load the right context at the right time.</text>
+  <text x="650" y="1182" class="small">在正确的时间加载正确的上下文</text>
+  <text x="650" y="1225" class="txt">Harness optimizes:</text>
+  <text x="650" y="1255" class="txt">• Context relevance</text>
+  <text x="650" y="1280" class="txt">• Context continuity</text>
+  <text x="650" y="1305" class="txt">• Governance consistency</text>
+
+  <!-- With -->
+  <rect x="1190" y="1040" width="530" height="285" rx="14" class="panel2"/>
+  <text x="1215" y="1076" class="h2 green">WITH HARNESS / 使用 Harness</text>
+  <text x="1215" y="1110" class="txt">Request → Router → Required Context only</text>
+  <text x="1215" y="1140" class="txt">• Progressive Disclosure 渐进式披露</text>
+  <text x="1215" y="1170" class="txt">• Selective Context Loading 按需加载</text>
+  <text x="1215" y="1200" class="txt">• Risk-based Routing 风险分级路由</text>
+  <text x="1215" y="1230" class="txt">• Checkpoint / Resume 状态恢复</text>
+  <text x="1215" y="1260" class="txt">• Focused Context 上下文聚焦</text>
+  <text x="1215" y="1298" class="small">Benchmark &amp; quantitative evaluation: PLANNED</text>
+
+  <path d="M580 1180 L625 1180" class="arrow2"/>
+  <path d="M1145 1180 L1190 1180" class="arrow"/>
+
+  <!-- footer -->
+  <text x="50" y="1425" class="mini">AI CodeOps Harness · How It Works · No unverified token-saving percentages or performance claims.</text>
+</svg>
