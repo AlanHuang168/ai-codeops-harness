@@ -30,6 +30,29 @@ Before entering IMPL, confirm:
 
 Otherwise, do not start implementation.
 
+## Root Cause Gate（根因门禁）
+
+For bug-fix Tasks, before any high-impact change, state and confirm:
+
+```text
+Symptom
+-> Root Cause
+-> Why existing tests missed it
+-> Fix Strategy
+-> Regression Protection
+```
+
+Rules:
+
+- A high-impact fix must not proceed while the Root Cause is unknown. Record the
+  symptom and stop for investigation instead of guessing.
+- A low-impact, obviously-scoped fix may state the root cause inline in one or
+  two lines; it does not need a separate document.
+- Regression Protection must add or identify a regression case that fails before
+  the fix and passes after it (see `testing.md` and `eval.md`).
+
+Do not resolve a defect with a large refactor in place of a stated root cause.
+
 ## Process
 
 ### 1. Select Task
@@ -125,6 +148,22 @@ Report only actual results.
 
 Classify every validation item as Executed Test（已执行测试）, Human Validation（人工验证）, Code-path Review（代码路径审查）, or NOT RUN（未执行）. Code-path Review is not equivalent to Executed Test, and NOT RUN must not be reported as PASS.
 
+Validate is the TEST（测试） step: it verifies code, interface, exception, and
+contract correctness. It is **not** proof of business effect.
+
+### 4b. EVAL（效果评估）
+
+When the Task changes an effect-bearing subsystem — parser, algorithm, AI /
+model, rule engine, or recommendation — run EVAL per `eval.md` after Validate:
+
+- Run the existing regression cases（回归数据集）; `pytest passed` alone is not
+  sufficient business-correctness evidence.
+- Measure the applicable effect metric(s) against the project-defined target.
+- Report each `result` as `PASS`, `FAIL`, `NOT_RUN`, or `BLOCKED`.
+
+When the Task is not effect-bearing, record EVAL as `N/A` with a one-line reason.
+Do not fabricate a metric.
+
 ### 5. Review
 
 Review from the perspectives relevant to the current Task:
@@ -138,6 +177,22 @@ Review from the perspectives relevant to the current Task:
 - Maintainability
 
 Load only the necessary Reviewer / Rule.
+
+Before Review passes, verify the Acceptance Contract（验收契约） defined by the
+PLAN:
+
+```yaml
+acceptance:
+  technical:
+    - <technical acceptance item>
+  business:
+    - <business acceptance item, or N/A>
+```
+
+- Technical Acceptance（技术验收） maps to TEST results.
+- Business Acceptance（业务验收） maps to EVAL results (see `eval.md`).
+- Review MUST NOT return PASS while any declared acceptance item is unmet or its
+  EVAL result is `FAIL`. An unmet acceptance item is a Blocker finding.
 
 ### 6. Fix
 
@@ -274,6 +329,21 @@ After all Tasks are done, check:
 Sync only the docs actually affected.
 
 Do not modify unaffected docs for form's sake.
+
+## Release Gate（发布门禁）
+
+When the change affects a deployable or distributable artifact (a service,
+server, or published package), Code Done（代码完成） is not Delivery Done
+（交付完成）. Apply `release.md` before declaring delivery complete:
+
+- Check README, API usage, health check, deployment docs, upgrade procedure,
+  rollback, smoke test, and runtime config; report each as `OK`, `MISSING`,
+  `N/A`, or `BLOCKED`.
+- Release, deploy, publish, push, and merge remain irreversible External Side
+  Effects（外部副作用）: stop at `RELEASE_GATE` / `APPROVAL_REQUIRED` and wait for
+  Human authorization regardless of Risk Tier.
+
+For a library or non-deployable change, record the Release Gate as `N/A`.
 
 ## Completion
 

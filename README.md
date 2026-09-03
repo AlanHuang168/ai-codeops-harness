@@ -218,6 +218,11 @@ Qwen、DeepSeek 等模型不会单独建立 Harness Adapter。
 
 - **Bootstrap（启动）**：从工具入口进入 Harness，建立最小执行上下文。
 - **Router（路由）**：根据需求、架构、计划和实现状态选择安全 Workflow 阶段。
+- **Change Risk Router（变更风险路由）**：先按风险把变更分为 Fast / Standard / Architecture 三条路径，决定 Root Cause Gate、EVAL、Acceptance Contract 和 Release Gate 的门禁强度，再交给 Router 选阶段。
+- **Root Cause Gate（根因门禁）**：Bug 修复在高影响改动前必须说明 Symptom → Root Cause → Why tests missed → Fix Strategy → Regression Protection。
+- **TEST / EVAL 分离**：TEST 验证代码与契约，EVAL 验证业务效果；parser / algorithm / AI / rule-engine / recommendation 变更必须运行回归数据集，`pytest passed` 不作为业务正确性的唯一证明。
+- **Acceptance Contract（验收契约）**：每个任务声明 Technical + Business 验收项，Review 通过前必须验证。
+- **Release Gate（发布门禁）**：可部署项目区分 Code Done 与 Delivery Done，检查 README、health check、部署、升级、回滚、smoke test 与 runtime config。
 - **Resume Protocol（恢复协议）**：从 State、Checkpoint 和 Current Reality 恢复中断任务。
 - **Continuous PLAN Execution（计划连续执行）**：PLAN 一次批准后连续执行范围内的 READY Task，直到完成或触发真实 Human Gate。
 - **Human Gate（人工门禁）**：只处理架构、范围、风险、破坏性操作和显式决策；Task 完成本身不是门禁。
@@ -266,6 +271,9 @@ Requirement → Spec → Design → Task → RED → GREEN → REFACTOR → Veri
 - Runtime Model
 - Codex Adapter
 - Claude Code Adapter
+- Change Risk Router（Fast / Standard / Architecture）
+- Root Cause Gate / TEST · EVAL 分离 / Acceptance Contract
+- Release / Deployment Definition of Done
 - Unified Manifest
 - Installer Contract
 - macOS / Linux Installer

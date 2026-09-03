@@ -20,6 +20,9 @@ The current source provides the following evidence:
 | adapters/shared/AGENTS.md | Common Bootstrap, routing, progressive disclosure, and V2 recovery rules | IMPLEMENTED Harness entry contract |
 | adapters/claude/CLAUDE.md | Claude Code entry adapter and Bootstrap forwarding | IMPLEMENTED adapter contract |
 | src/workflows/router.md | Workflow selection, re-entry, escalation, and routing output | PROTOCOL-DEFINED |
+| src/workflows/risk-router.md | Change Risk classification and Fast / Standard / Architecture path mapping | PROTOCOL-DEFINED |
+| src/rules/eval.md | TEST vs EVAL separation, Eval Contract, and regression dataset obligation | PROTOCOL-DEFINED |
+| src/rules/release.md | Release / Deployment Definition of Done and Release Gate | PROTOCOL-DEFINED |
 | src/workflows/*.md | PRD, ADR, PLAN, IMPL, and Orchestrator workflow instructions | PROTOCOL-DEFINED |
 | src/rules/*.md | Generic engineering constraints loaded by task need | PROTOCOL-DEFINED |
 | src/roles/*.md | Role guidance loaded by task need | PROTOCOL-DEFINED |
@@ -157,9 +160,12 @@ Terminal states（终止状态）:
 - `SCOPE_EXPANSION`（范围扩张）
 - `SECURITY_GATE`（安全门禁）
 - `DESTRUCTIVE_ACTION`（破坏性操作）
+- `RELEASE_GATE`（发布门禁）
 - `UNRECOVERABLE_FAILURE`（不可恢复失败）
 
-Task completion is not a Human Gate.
+Task completion is not a Human Gate. `RELEASE_GATE` is the release / deploy /
+publish specialization of the External Side Effect gate and always requires
+Human authorization regardless of Risk Tier.
 
 ## Progressive Disclosure
 
@@ -343,6 +349,9 @@ The current repository has no formal sdd.md or tdd.md workflow. These are
 | --- | --- | --- |
 | Codex and Claude Code adapter entry | IMPLEMENTED | adapters/ source files |
 | Bootstrap and Router instructions | PROTOCOL-DEFINED | Adapter and src/workflows/router.md |
+| Change Risk Router and Risk Tiers | PROTOCOL-DEFINED | src/workflows/risk-router.md |
+| TEST / EVAL separation and Acceptance Contract | PROTOCOL-DEFINED | src/rules/eval.md, src/workflows/plan.md, src/workflows/impl.md |
+| Release / Deployment Definition of Done | PROTOCOL-DEFINED | src/rules/release.md |
 | PRD / ADR / PLAN / IMPL workflows | PROTOCOL-DEFINED | src/workflows/ |
 | Rules and Roles | PROTOCOL-DEFINED | src/rules/, src/roles/ |
 | Authority and Progressive Disclosure | PROTOCOL-DEFINED | Adapter, Router, and V2 protocol |

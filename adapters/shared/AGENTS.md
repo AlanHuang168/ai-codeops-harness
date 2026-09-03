@@ -198,6 +198,27 @@ chat.
 - `docs` is Human / Project Artifacts（人工/项目产物），用于 PRD、ADR、PLAN、交接和其他项目文档。
 - Human review documents must use English Term（中文解释） for key terms and conclusions.
 
+## Change Risk Classification（变更风险分级）
+
+Before routing a non-trivial task to a Workflow stage, classify the change by
+Risk（风险） using `.ai/workflows/risk-router.md`, and state the tier and its
+selecting trigger:
+
+- Fast Path（Low Risk）: small bug, small local feature, local refactor, docs
+  fix — direct `IMPL`, Root Cause Gate for bug fixes, 0 new approvals.
+- Standard Path（Medium Risk）: medium feature, new module, non-breaking API
+  change, multi-file business change, effect-bearing change — `PLAN` -> Approval
+  -> `IMPL`, plus EVAL when effect-bearing, plus Acceptance Contract.
+- Architecture Path（High Risk）: architecture, data model / schema, migration,
+  breaking API, security / auth, infrastructure or protocol change — `ADR` ->
+  `PLAN` -> Approval -> `IMPL`, plus EVAL, Acceptance Contract, and Release Gate.
+
+Classification and stage routing compose: risk decides ceremony, the stage
+router decides the entry stage. Ambiguity escalates the tier upward, never
+downward. Do not default every task to the heavy path, and do not downgrade a
+tier to skip a gate. `risk_tier` is optional on the PLAN and Approval Record;
+absent means Standard.
+
 ## Workflow Routing
 
 For non-trivial development tasks, read:
@@ -295,21 +316,31 @@ Before declaring a feature or bug fix complete:
    * typecheck
    * tests
    * build
-3. Inspect the final diff and check for Scope Drift.
-4. Evaluate documentation impact.
-5. Synchronize affected:
+3. Verify the Acceptance Contract（验收契约） when the PLAN defines one:
+
+   * Technical Acceptance（技术验收） maps to TEST results.
+   * Business Acceptance（业务验收） maps to EVAL results（`.ai/rules/eval.md`）
+     for parser / algorithm / AI / rule-engine / recommendation changes.
+   * Do not declare done while a declared acceptance item is unmet.
+4. Inspect the final diff and check for Scope Drift.
+5. Evaluate documentation impact.
+6. Synchronize affected:
 
    * Project Context（`docs/project/`）and the AI adapter file
    * ADRs
    * the system map
    * contracts
    * README / AGENTS documentation
-6. Report:
+7. Report:
 
    * implemented changes
    * actual validation results
    * remaining risks
    * follow-up items
+8. For a deployable or distributable change, apply the Release Gate
+   （`.ai/rules/release.md`）: Code Done（代码完成）is not Delivery Done
+   （交付完成）. Release, deploy, publish, push, and merge remain irreversible
+   Human Gates regardless of Risk Tier.
 
 Do not declare a task complete while required documentation is out of sync.
 

@@ -188,6 +188,11 @@ Harness Adapters.
 
 - **Bootstrap**: enters the Harness through a tool adapter and establishes the minimum context.
 - **Router**: selects the safest Workflow stage from requirements, architecture, plan, and implementation state.
+- **Change Risk Router**: classifies a change into Fast / Standard / Architecture paths first, deciding the strength of the Root Cause Gate, EVAL, Acceptance Contract, and Release Gate, then hands off to the Router for stage selection.
+- **Root Cause Gate**: a bug fix must state Symptom → Root Cause → Why tests missed it → Fix Strategy → Regression Protection before any high-impact change.
+- **TEST / EVAL Separation**: TEST verifies code and contracts; EVAL verifies business effect. Parser / algorithm / AI / rule-engine / recommendation changes must run the regression dataset; `pytest passed` alone is not proof of business correctness.
+- **Acceptance Contract**: every task declares Technical + Business acceptance items that Review must verify before passing.
+- **Release Gate**: deployable projects separate Code Done from Delivery Done, checking README, health check, deployment, upgrade, rollback, smoke test, and runtime config.
 - **Resume Protocol**: recovers interrupted work from State, Checkpoints, and Current Reality.
 - **Continuous PLAN Execution**: continues READY Tasks after one PLAN approval until completion or a real Human Gate.
 - **Human Gate**: handles architecture, scope, risk, destructive actions, and explicit decisions; Task completion is not a gate.
@@ -238,6 +243,9 @@ The roadmap reflects the current development direction and is not a fixed delive
 - Runtime Model
 - Codex Adapter
 - Claude Code Adapter
+- Change Risk Router (Fast / Standard / Architecture)
+- Root Cause Gate / TEST · EVAL Separation / Acceptance Contract
+- Release / Deployment Definition of Done
 - Unified Manifest
 - Installer Contract
 - macOS / Linux Installer

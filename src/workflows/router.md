@@ -14,6 +14,21 @@ PRD
 
 Not every task must start from PRD.
 
+## Change Risk Classification First（先分级，再选阶段）
+
+Before selecting a stage, classify the change by Risk（风险） using
+`risk-router.md`. Risk classification and stage selection compose:
+
+- Fast Path（Low Risk）-> typically direct `IMPL`.
+- Standard Path（Medium Risk）-> `PLAN` -> Human Approval -> `IMPL`.
+- Architecture Path（High Risk）-> `ADR` -> `PLAN` -> Human Approval -> `IMPL`,
+  plus Release Gate when deployable.
+
+The stage routing below still owns PRD / ADR / PLAN / IMPL selection by
+uncertainty. The Risk Router does not replace it; it decides the ceremony
+(Root Cause Gate, EVAL, Acceptance Contract, Release Gate) that the stage flow
+must carry. Ambiguity escalates the tier upward, never downward.
+
 ## Routing Principle
 
 Prefer the latest stage from which the task can be completed safely.
@@ -169,6 +184,9 @@ Read only the minimal context needed to make the routing decision.
 ## Routing Output
 
 Before starting a complex task, state:
+
+Risk Tier: <Fast | Standard | Architecture>
+Trigger: <the one condition that selected this tier>
 
 Workflow: <PRD | ADR | PLAN | IMPL>
 

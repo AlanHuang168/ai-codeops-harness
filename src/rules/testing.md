@@ -7,6 +7,15 @@ Define mandatory verification constraints for implementation changes.
 Apply these rules when a task changes application behavior,
 data behavior, integrations, contracts, or user-visible functionality.
 
+## TEST vs EVAL（测试与评估）
+
+These rules define **TEST（测试）**: verification that code, interfaces,
+exceptions, and contracts are correct.
+
+They do **not** cover business effect. For parser / algorithm / AI / rule-engine
+/ recommendation changes, effect correctness is verified by **EVAL（效果评估）**
+— see `eval.md`. A passing test suite is not proof of business effect.
+
 ## Rules
 
 ### Validation Status and Evidence Kind
@@ -71,6 +80,32 @@ A regression test should:
 3. Verify observable behavior.
 
 Do not modify expected results merely to make an incorrect implementation pass.
+
+A bug fix's Regression Protection（回归保护） is the output of the Root Cause Gate
+（根因门禁, see `impl.md`）: the stated root cause determines what the regression
+case must lock in so the same defect cannot silently return.
+
+### Regression Dataset（回归数据集）
+
+For parser / algorithm / AI / rule-engine / recommendation subsystems, the
+regression dataset is a first-class artifact, not an optional extra:
+
+```text
+tests/fixtures/        # inputs + expected outputs (project-owned)
+<regression runner>    # project-owned command that runs the fixtures
+```
+
+Rules:
+
+- Every change to such a subsystem must run the existing regression cases before
+  completion.
+- `pytest passed`（或等价测试通过） alone is not sufficient business-correctness
+  evidence; pair it with the regression dataset and EVAL（see `eval.md`）.
+- Fixtures, expected outputs, and the runner are project inputs, resolved on
+  demand like Project Context. The harness never carries project-specific
+  fixtures, metrics, or thresholds.
+- If an effect-bearing subsystem has no regression dataset, record the gap as a
+  Follow-up rather than declaring business correctness on TEST alone.
 
 ### Happy Path
 

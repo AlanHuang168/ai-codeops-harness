@@ -142,6 +142,7 @@ active_artifacts:
     status: Approved
     digest: sha256:...
     approval_record_id: APPROVAL-0001
+    risk_tier: standard   # optional; fast | standard | architecture; absent = standard
 
 workflow:
   current_stage: ORCHESTRATOR
@@ -276,6 +277,8 @@ decision: approved
 status: active
 approved_at: "2026-08-27T00:00:00Z"
 
+risk_tier: standard   # optional; fast | standard | architecture; absent = standard
+
 scope:
   execution_mode: plan_continuous
   allow:
@@ -409,6 +412,45 @@ When a newer PLAN replaces an older PLAN, the older PLAN Approval Record must
 not authorize the newer PLAN. Mark the old approval `superseded` or
 `historical`, and create or reference a separate active approval for the newer
 PLAN.
+
+## Risk Tier and Acceptance Contract（风险分级与验收契约）
+
+Risk Tier（风险分级） is an optional Runtime field that records how a change was
+classified by the Change Risk Router（`src/workflows/risk-router.md`）. It is
+additive: when absent, Runtime treats the change as `standard`.
+
+```yaml
+risk_tier: standard   # fast | standard | architecture
+```
+
+Tier to approval mapping:
+
+| Tier | New Human Approvals | Added gates |
+| --- | --- | --- |
+| `fast` | 0 (in-scope authorization) | Root Cause Gate for bug fixes |
+| `standard` | 1 (PLAN) | EVAL when effect-bearing, Acceptance Contract |
+| `architecture` | key nodes: ADR + PLAN | EVAL, Acceptance Contract, Release Gate |
+
+Risk Tier never lowers a real Human Gate. Irreversible operations — data
+deletion, database Migration（迁移）, auth / authz change, breaking API, release,
+and `git push` / merge / deploy / publish — keep their existing gate at any tier.
+
+Acceptance Contract（验收契约） is an Exit-Gate input, not a new State object. A
+PLAN declares it and IMPL Review verifies it before Task completion:
+
+```yaml
+acceptance:
+  technical:      # TEST-level: code, interface, exception, contract
+    - tests pass
+    - api compatible
+  business:       # EVAL-level: effect / output quality; see src/rules/eval.md
+    - expected fixture outputs match
+    - latency target satisfied
+```
+
+Review must not pass while a declared acceptance item is unmet or its EVAL
+result is `FAIL`. Detailed EVAL logs stay out of State（状态）; only minimal
+Validation Summary（验证摘要） is stored, consistent with the evidence rules.
 
 ## Checkpoint Schema（检查点模型）
 
@@ -697,7 +739,12 @@ Terminal states:
 - `SCOPE_EXPANSION`（范围扩张）
 - `SECURITY_GATE`（安全门禁）
 - `DESTRUCTIVE_ACTION`（破坏性操作）
+- `RELEASE_GATE`（发布门禁）
 - `UNRECOVERABLE_FAILURE`（不可恢复失败）
+
+`RELEASE_GATE`（发布门禁） is the release / deploy / publish specialization of the
+policy-gated External Side Effect（外部副作用）. It always requires a Human Gate
+regardless of Risk Tier（风险分级）. See `src/rules/release.md`.
 
 Human Gate Policy（人工门禁策略）:
 

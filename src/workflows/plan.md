@@ -167,6 +167,54 @@ At minimum:
 8. Documentation Impact
 9. Execution Mode（执行模式） and Approval Scope（批准范围）
 10. Approval Record target（审批记录目标）
+11. Risk Tier（风险分级） and its selecting trigger
+12. Acceptance Contract（验收契约）: technical + business
+13. Eval Plan（评估计划） when the change is effect-bearing, else `N/A`
+14. Release DoD flag（发布完成定义标记） when the project is deployable, else `N/A`
+
+Risk Tier（风险分级） comes from `risk-router.md`: `fast`, `standard`, or
+`architecture`. When `risk_tier` is absent, Runtime treats the PLAN as
+`standard`. Record it on the PLAN and Approval Record:
+
+```yaml
+risk_tier: standard   # fast | standard | architecture
+```
+
+### Acceptance Contract（验收契约）
+
+Every PLAN must state Technical Acceptance（技术验收） and Business Acceptance
+（业务验收）. IMPL verifies this contract before Review passes.
+
+```yaml
+acceptance:
+  technical:
+    - tests pass
+    - api compatible
+  business:
+    - expected fixture outputs match
+    - latency target satisfied
+```
+
+- Technical items are TEST-level (code, interface, exception, contract).
+- Business items are EVAL-level (effect / output quality); see `eval.md`.
+- If the change is not effect-bearing, the business section may be `N/A` with a
+  one-line reason.
+
+### Eval Plan（评估计划）
+
+For parser / algorithm / AI / rule-engine / recommendation changes, define the
+Eval Contract per `eval.md`. The project owns metrics, datasets, and targets;
+the PLAN records which apply:
+
+```yaml
+eval:
+  - metric: <project-defined>
+    dataset: <path>
+    target: <threshold>
+    measurement: <how measured>
+```
+
+If no effect metric applies, record `eval: N/A`.
 
 Default:
 
@@ -196,6 +244,22 @@ approval_record:
 `task_gated` may be used only as an explicit compatibility mode. Do not make it
 the default.
 
+## Bug-fix PLAN（缺陷修复计划）
+
+When a PLAN Task is a bug fix, it must carry the Root Cause Gate（根因门禁）
+inputs so IMPL can verify them before a high-impact change (see `impl.md`):
+
+```yaml
+root_cause:
+  symptom: <observed defect>
+  root_cause: <why it happens>
+  why_tests_missed: <why existing tests did not catch it>
+  fix_strategy: <how it is fixed>
+  regression_protection: <regression case / fixture that now covers it>
+```
+
+A high-impact bug fix must not be planned without a stated root cause.
+
 ## Task Template
 
 ### Task N: <name>
@@ -214,6 +278,10 @@ Changes:
 
 Validation:
 - <validation method>
+
+Acceptance:
+- technical: <technical acceptance item>
+- business: <business acceptance item, or N/A>
 
 Human Gate:
 - requires_human_decision: false
